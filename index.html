@@ -29,8 +29,32 @@
       </div>
       <div class="right-top"><button class="btn">🔔</button></div>
     </div>
-    <div class="filters"><div class="field">Filtre : Toutes les tâches</div><div class="field">Recherche...</div></div>
 
+    <!-- =============================
+        BARRE FILTRE + RECHERCHE
+    ============================= -->
+    <div class="task-toolbar-search">
+      
+      <!-- Bloc filtre -->
+      <div class="task-toolbar-filter-group">
+        <label class="task-toolbar-filter-label" for="taskFilterSelect">
+          Trie :
+        </label>
+
+        <select class="task-toolbar-filter-select" id="taskFilterSelect">
+          <option>Statut</option>
+          <option>Catégorie</option>
+          <option>Urgence</option>
+        </select>
+      </div>
+
+      <!-- Bloc recherche -->
+      <input
+        type="text"
+        class="task-toolbar-search-input"
+        placeholder="Rechercher..."
+      />
+    </div>
     <section class="grid">
       <div class="panel">
         <div class="label">EN COURS (2)</div>
