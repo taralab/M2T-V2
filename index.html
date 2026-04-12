@@ -41,22 +41,49 @@
     <div class="task-editor-panel">
       <!-- Barre d'actions -->    
       <div class="task-editor-toolbar">
-        <button class="task-editor-toolbar-button">
-          <img src="./images/IconeValider.webp" alt="Valider">
-        </button>
-        <button class="task-editor-toolbar-button">
-          <img src="./images/IconeImprimer.webp" alt="Imprimer">
-        </button>
-        <button class="task-editor-toolbar-button task-editor-toolbar-button-danger">
-          <img src="./images/IconeSupprimer.webp" alt="Supprimer">
-        </button>
-      </div><!-- Barre d'actions -->
+        <!-- Actions gauche -->
+        <div class="task-editor-toolbar-actions">
+          <button class="task-editor-toolbar-button">
+            <img src="./images/IconeValider.webp" alt="Valider">
+          </button>
+
+          <button class="task-editor-toolbar-button">
+            <img src="./images/IconeImprimer.webp" alt="Imprimer">
+          </button>
+
+          <button class="task-editor-toolbar-button task-editor-toolbar-button-danger">
+            <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+          </button>
+        </div>
+
+        <!-- Meta droite -->
+        <div class="task-editor-toolbar-meta">
+          <div class="task-editor-toolbar-meta-item">
+            <span class="task-editor-toolbar-meta-label">Urgence</span>
+            <select class="task-editor-toolbar-select">
+              <option>Basse</option>
+              <option selected>Moyenne</option>
+              <option>Haute</option>
+            </select>
+          </div>
+
+          <div class="task-editor-toolbar-meta-item">
+            <span class="task-editor-toolbar-meta-label">Statut</span>
+            <select class="task-editor-toolbar-select">
+              <option>À faire</option>
+              <option selected>En cours</option>
+              <option>En attente</option>
+            </select>
+          </div>
+        </div>
+      </div>
 
 
       <!-- Catégorie -->
       <input
         type="text"
         class="task-editor-category-input"
+        placeholder="[ Catégorie ]"
         value="Gestion de projet"
       />
 
@@ -64,6 +91,7 @@
       <input
         type="text"
         class="task-editor-title-input"
+        placeholder="Titre de la tâche"
         value="Réunion de lancement du projet marketing Q4"
       />
 
