@@ -8,6 +8,8 @@
     .app{
       display:grid;grid-template-columns:88px 1fr;min-height:100vh
     }
+
+    /* MENU PRINCIPALE */
     .sidebar{
       background:var(--sidebar);padding:20px 14px;display:flex;flex-direction:column;align-items:center;gap:18px
     }
@@ -16,24 +18,33 @@
     }
     .icon.active{
       background:var(--primary)} .spacer{flex:1}
+
+      /*Main area  */
     .main{
       padding:22px
     }
+
+    /* TOP AREA */
     .top{
       display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-bottom:20px
     }
     .left-top,.right-top{
       display:flex;align-items:center;gap:12px;flex-wrap:wrap
     }
+
+    /* DATE DU JOUR */
     h1{
       font-size:clamp(28px,3vw,30px);margin:0;font-weight:800
     }
+
+    /* BOUTON NOUVELLE TACHE */
     .btn{
       width:42px;height:42px;border:none;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)
     }
     .btn.primary{
       background:var(--primary);color:#fff
     }
+
 
     .filters{
       display:flex;gap:16px;flex-wrap:wrap;margin-bottom:20px}.field{background:#fff;border:1px solid var(--line);padding:12px 16px;border-radius:14px;min-width:260px;color:var(--muted)
@@ -47,6 +58,8 @@
     .label{
       font-size:14px;color:#5362df;font-weight:800;margin-bottom:14px
     }
+
+    /* LA LISTE DES TÄCHES */
     .task{
       border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}.meta{font-size:13px;color:var(--muted)
       }
@@ -59,9 +72,7 @@
     .muted{
       color:var(--muted);line-height:1.7}.steps{margin-top:18px;display:grid;gap:12px}.step{display:flex;gap:10px
       }
-    .footer-meta{
-      margin-top:24px;background:#f7f8fd;border-radius:16px;padding:16px;display:grid;grid-template-columns:repeat(2,1fr);gap:16px;color:var(--muted)
-    }
+
     .deadline{
       background:var(--purple-soft);padding:16px;border-radius:14px;margin-top:14px;font-weight:600}.deadline.green{background:#e4f7ee}
 
@@ -211,7 +222,7 @@
 ============================= */
 .task-editor-step-row {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto auto 1fr auto auto auto;
   gap: 12px;
   align-items: center;
   padding: 12px;
@@ -236,12 +247,18 @@
 }
 
 .task-editor-step-date,
-.task-editor-step-alert {
+.task-editor-step-alert,
+.task-editor-step-delete,
+.task-editor-step-drag {
   border: none;
   background: transparent;
   cursor: pointer;
   color: #6b7280;
   font-size: 14px;
+}
+.task-editor-step-alert img,
+.task-editor-step-delete img {
+  width: 18px;
 }
 /* =============================
    BOUTON AJOUT D'ÉTAPE

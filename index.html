@@ -12,7 +12,13 @@
 <body>
 <div class="app">
   <aside class="sidebar">
-    <div class="icon active">⌂</div><div class="icon">☰</div><div class="icon">▣</div><div class="icon">☷</div><div class="icon">⚙</div><div class="spacer"></div><div class="icon">?</div>
+    <div class="icon active">⌂</div>
+    <div class="icon">☰</div>
+    <div class="icon">▣</div>
+    <div class="icon">☷</div>
+    <div class="icon">⚙</div>
+    <div class="spacer"></div>
+    <div class="icon">?</div>
   </aside>
   <main class="main">
     <div class="top">
@@ -107,11 +113,34 @@
 
         <!-- Zone scrollable de étapes -->
           <div class="task-editor-steps-scroll">
+
             <div class="task-editor-step-row">
+              <button class="task-editor-step-drag">⋮⋮</button>
               <input type="checkbox" class="task-editor-step-checkbox" />
-              <div class="task-editor-step-text" contenteditable="true">Présenter les objectifs et le planning</div>
+              <div class="task-editor-step-text" contenteditable="true">
+                Présenter les objectifs et le planning
+              </div>
               <button class="task-editor-step-date">04 oct. 2024</button>
-              <button class="task-editor-step-alert">🔔</button>
+              <button class="task-editor-step-alert">
+                <img src="./images/IconeNotifyEnabled.webp" alt="Alerte">
+              </button>
+              <button class="task-editor-step-delete">
+                <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+              </button>
+            </div>
+            <div class="task-editor-step-row">
+              <button class="task-editor-step-drag">⋮⋮</button>
+              <input type="checkbox" class="task-editor-step-checkbox" />
+              <div class="task-editor-step-text" contenteditable="true">
+                Présenter les objectifs et le planning
+              </div>
+              <button class="task-editor-step-date">04 oct. 2024</button>
+              <button class="task-editor-step-alert">
+                <img src="./images/IconeNotifyDisabled.webp" alt="Alerte">
+              </button>
+              <button class="task-editor-step-delete">
+                <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+              </button>
             </div>
 
             <!-- Bouton à ajouter dynamiquement -->
