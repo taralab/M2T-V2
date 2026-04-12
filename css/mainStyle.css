@@ -70,39 +70,6 @@
 
 
 
-/* =============================
-   INPUTS PRINCIPAUX
-============================= */
-.task-editor-category-input,
-.task-editor-title-input,
-.task-editor-description-input {
-  width: 100%;
-  border: none;
-  outline: none;
-  background: transparent;
-  font-family: inherit;
-}
-
-.task-editor-category-input {
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 600;
-}
-
-.task-editor-title-input {
-  font-size: 36px;
-  font-weight: 800;
-  color: #182033;
-}
-
-.task-editor-description-input {
-  min-height: 100px;
-  resize: vertical;
-  font-size: 15px;
-  line-height: 1.7;
-  color: #4b5563;
-}
-
 
 
 /* =============================
@@ -143,7 +110,9 @@
   background: #fff1f1;
 }
 
-
+.task-editor-toolbar-button img{
+  width: 24px;
+}
 
 /* =============================
    INPUTS PRINCIPAUX
@@ -165,7 +134,7 @@
 }
 
 .task-editor-title-input {
-  font-size: 36px;
+  font-size: 28px;
   font-weight: 800;
   color: #182033;
 }
