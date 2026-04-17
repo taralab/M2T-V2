@@ -10,224 +10,229 @@
   <link rel="stylesheet" href="./css/mainStyle.css">
 </head>
 <body>
-<div class="app">
-  <aside class="sidebar">
-    <div class="icon active">⌂</div>
-    <div class="icon">☰</div>
-    <div class="icon">▣</div>
-    <div class="icon">☷</div>
-    <div class="icon">⚙</div>
-    <div class="spacer"></div>
-    <div class="icon">?</div>
-  </aside>
-  <main class="main">
-    <div class="top">
-      <div class="left-top">
-        <h1>Mercredi 8 avril 2026</h1>
-        <button class="btn primary">
-          <img src="./images/IconeNewTask.webp" alt="Nouveau">
-        </button>
-        <button class="btn"><img src="./images/IconeNewFromTemplate.webp" alt="Modèle"></button>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="icon active">⌂</div>
+      <div class="icon">☰</div>
+      <div class="icon">▣</div>
+      <div class="icon">☷</div>
+      <div class="icon">⚙</div>
+      <div class="spacer"></div>
+      <div class="icon">?</div>
+    </aside>
+    <main class="main">
+      <div class="top">
+        <div class="left-top">
+          <h1>Mercredi 8 avril 2026</h1>
+          <button class="btn primary">
+            <img src="./images/IconeNewTask.webp" alt="Nouveau">
+          </button>
+          <button class="btn"><img src="./images/IconeNewFromTemplate.webp" alt="Modèle"></button>
+        </div>
+        <div class="right-top"><button class="btn">🔔</button></div>
       </div>
-      <div class="right-top"><button class="btn">🔔</button></div>
-    </div>
-
-    <!-- =============================
-        BARRE FILTRE + RECHERCHE
-    ============================= -->
-    <div class="task-toolbar-search">
-      
-      <!-- Bloc filtre -->
-      <div class="task-toolbar-filter-group">
-        <label class="task-toolbar-filter-label" for="taskFilterSelect">
-          Trie :
-        </label>
-
-        <select class="task-toolbar-filter-select" id="taskFilterSelect">
-          <option>Statut</option>
-          <option>Catégorie</option>
-          <option>Urgence</option>
-        </select>
-      </div>
-
-      <!-- Bloc recherche -->
-      <input
-        type="text"
-        class="task-toolbar-search-input"
-        placeholder="Rechercher..."
-      />
-    </div>
-    <section class="grid">
-      <div class="panel">
-        <div class="label">EN COURS (2)</div>
-
 
       <!-- =============================
-            CARTE TÂCHE
-        ============================= -->
-        <div class="task-list-item">
+          BARRE FILTRE + RECHERCHE
+      ============================= -->
+      <div class="task-toolbar-search">
+        
+        <!-- Bloc filtre -->
+        <div class="task-toolbar-filter-group">
+          <label class="task-toolbar-filter-label" for="taskFilterSelect">
+            Trie :
+          </label>
 
-          <!-- image / icône -->
-          <div class="task-list-item-image"></div>
+          <select class="task-toolbar-filter-select" id="taskFilterSelect">
+            <option>Statut</option>
+            <option>Catégorie</option>
+            <option>Urgence</option>
+          </select>
+        </div>
 
-          <!-- contenu -->
-          <div class="task-list-item-content">
+        <!-- Bloc recherche -->
+        <input
+          type="text"
+          class="task-toolbar-search-input"
+          placeholder="Rechercher..."
+        />
+      </div>
+      <section class="grid">
+        <div class="panel" id="divItemNoteListParent">
+          <div class="label">EN COURS (2)</div>
 
-            <!-- ligne du haut -->
-            <div class="task-list-item-header">
-              
-              <div class="task-list-item-texts">
-                <span class="task-list-item-category">[ Gestion de projet ]</span>
-                <div class="task-list-item-title">
-                  Finalisation du budget pour le projet marketing
+
+        <!-- =============================
+              CARTE TÂCHE
+          ============================= -->
+          <div class="task-list-item">
+
+            <!-- image / icône -->
+            <div class="task-list-item-image"></div>
+
+            <!-- contenu -->
+            <div class="task-list-item-content">
+
+              <!-- ligne du haut -->
+              <div class="task-list-item-header">
+                
+                <div class="task-list-item-texts">
+                  <span class="task-list-item-category">[ Gestion de projet ]</span>
+                  <div class="task-list-item-title">
+                    Finalisation du budget pour le projet marketing
+                  </div>
                 </div>
+
+                <div class="task-list-item-percentage">40%</div>
+
               </div>
 
-              <div class="task-list-item-percentage">40%</div>
-
-            </div>
-
-            <!-- barre de progression -->
-            <div class="task-list-item-progress">
-              <div class="task-list-item-progress-bar" style="width: 40%;"></div>
-            </div>
-
-          </div>
-        </div>
-
-        <div class="label" style="margin-top:22px">À FAIRE (7)</div>
-
-      </div>
-
-
-    <!-- EDITEUR DE TACHE -->
-    <div class="task-editor-panel">
-      <!-- Barre d'actions -->    
-      <div class="task-editor-toolbar">
-        <!-- Actions gauche -->
-        <div class="task-editor-toolbar-actions">
-          <button class="task-editor-toolbar-button">
-            <img src="./images/IconeValider.webp" alt="Valider">
-          </button>
-
-          <button class="task-editor-toolbar-button">
-            <img src="./images/IconeImprimer.webp" alt="Imprimer">
-          </button>
-
-          <button class="task-editor-toolbar-button task-editor-toolbar-button-danger">
-            <img src="./images/IconeSupprimer.webp" alt="Supprimer">
-          </button>
-        </div>
-
-        <!-- Meta droite -->
-        <div class="task-editor-toolbar-meta">
-          <div class="task-editor-toolbar-meta-item">
-            <span class="task-editor-toolbar-meta-label">Urgence</span>
-            <select class="task-editor-toolbar-select">
-              <option>Basse</option>
-              <option selected>Moyenne</option>
-              <option>Haute</option>
-            </select>
-          </div>
-
-          <div class="task-editor-toolbar-meta-item">
-            <span class="task-editor-toolbar-meta-label">Statut</span>
-            <select class="task-editor-toolbar-select">
-              <option>À faire</option>
-              <option selected>En cours</option>
-              <option>En attente</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-
-      <!-- Catégorie -->
-      <input
-        type="text"
-        class="task-editor-category-input"
-        placeholder="[ Catégorie ]"
-        value="Gestion de projet"
-      />
-
-      <!-- Titre -->
-      <input
-        type="text"
-        class="task-editor-title-input"
-        placeholder="Titre de la tâche"
-        value="Réunion de lancement du projet marketing Q4"
-      />
-
-      <!-- Description -->
-      <div class="task-editor-section">
-        <p class="task-editor-section-label">Détail de la tâche</p>
-        <textarea class="task-editor-description-input">Organiser la première réunion avec l'équipe marketing pour définir les objectifs, le planning et les responsabilités.</textarea>
-      </div>
-
-      <!-- Étapes -->
-      <div class="task-editor-section">
-        <p class="task-editor-section-label">Étapes</p>
-
-        <!-- Zone scrollable de étapes -->
-          <div class="task-editor-steps-scroll">
-
-            <div class="task-editor-step-row">
-              <button class="task-editor-step-drag">⋮⋮</button>
-              <input type="checkbox" class="task-editor-step-checkbox" />
-              <div class="task-editor-step-text" contenteditable="true">
-                Présenter les objectifs et le planning
+              <!-- barre de progression -->
+              <div class="task-list-item-progress">
+                <div class="task-list-item-progress-bar" style="width: 40%;"></div>
               </div>
-              <button class="task-editor-step-date">04 oct. 2024</button>
-              <button class="task-editor-step-alert">
-                <img src="./images/IconeNotifyEnabled.webp" alt="Alerte">
-              </button>
-              <button class="task-editor-step-delete">
-                <img src="./images/IconeSupprimer.webp" alt="Supprimer">
-              </button>
-            </div>
-            <div class="task-editor-step-row">
-              <button class="task-editor-step-drag">⋮⋮</button>
-              <input type="checkbox" class="task-editor-step-checkbox" />
-              <div class="task-editor-step-text" contenteditable="true">
-                Présenter les objectifs et le planning
-              </div>
-              <button class="task-editor-step-date">04 oct. 2024</button>
-              <button class="task-editor-step-alert">
-                <img src="./images/IconeNotifyDisabled.webp" alt="Alerte">
-              </button>
-              <button class="task-editor-step-delete">
-                <img src="./images/IconeSupprimer.webp" alt="Supprimer">
-              </button>
-            </div>
 
-            <!-- Bouton à ajouter dynamiquement -->
-            <button class="task-editor-add-step-button">
-              + Ajouter une étape
+            </div>
+          </div>
+
+          <div class="label" style="margin-top:22px">À FAIRE (7)</div>
+
+        </div>
+
+
+      <!-- EDITEUR DE TACHE -->
+      <div class="task-editor-panel">
+        <!-- Barre d'actions -->    
+        <div class="task-editor-toolbar">
+          <!-- Actions gauche -->
+          <div class="task-editor-toolbar-actions">
+            <button class="task-editor-toolbar-button" id="btnTaskEditorValider">
+              <img src="./images/IconeValider.webp" alt="Valider">
+            </button>
+
+            <button class="task-editor-toolbar-button" id="btnTaskEditorPrint">
+              <img src="./images/IconeImprimer.webp" alt="Imprimer">
+            </button>
+
+            <button class="task-editor-toolbar-button task-editor-toolbar-button-danger" id="btnTaskEditorDelete">
+              <img src="./images/IconeSupprimer.webp" alt="Supprimer">
             </button>
           </div>
+
+          <!-- Meta droite -->
+          <div class="task-editor-toolbar-meta">
+            <div class="task-editor-toolbar-meta-item">
+              <span class="task-editor-toolbar-meta-label">Urgence</span>
+              <select class="task-editor-toolbar-select" id="selectTaskEditorUrgence">
+                <option>Basse</option>
+                <option selected>Moyenne</option>
+                <option>Haute</option>
+              </select>
+            </div>
+
+            <div class="task-editor-toolbar-meta-item">
+              <span class="task-editor-toolbar-meta-label">Statut</span>
+              <select class="task-editor-toolbar-select" id="selectTaskEditorStatus">
+                <option>À faire</option>
+                <option selected>En cours</option>
+                <option>En attente</option>
+              </select>
+            </div>
+          </div>
         </div>
 
-        <!-- Dates bas de carte -->
-        <div class="task-editor-dates-box">
-          <div class="task-editor-date-item">
-            <span class="task-editor-date-label">Début</span>
-            <button class="task-editor-date-value">19 sept. 2024</button>
-          </div>
 
-          <div class="task-editor-date-item">
-            <span class="task-editor-date-label">Fin</span>
-            <button class="task-editor-date-value">04 oct. 2024</button>
-          </div>
+        <!-- Catégorie -->
+        <input
+          type="text"
+          class="task-editor-category-input"
+          placeholder="[ Catégorie ]"
+          value="Gestion de projet"
+          id="inputTaskEditorCategory"
+        />
+
+        <!-- Titre -->
+        <input
+          type="text"
+          class="task-editor-title-input"
+          placeholder="Titre de la tâche"
+          value="Réunion de lancement du projet marketing Q4"
+          id="inputTaskEditorTitle"
+        />
+
+        <!-- Description -->
+        <div class="task-editor-section">
+          <p class="task-editor-section-label">Détail de la tâche</p>
+          <textarea class="task-editor-description-input" id="textareaTaskEditorDetail">Organiser la première réunion avec l'équipe marketing pour définir les objectifs, le planning et les responsabilités.</textarea>
         </div>
-    </div>
 
-      <div class="panel side-deadlines">
-        <h3>Échéances du mois</h3>
-        <div class="deadline">Bilan T1 — 15 avr.</div>
-        <div class="deadline green">Campagne de printemps — 30 avr.</div>
+        <!-- Étapes -->
+        <div class="task-editor-section">
+          <p class="task-editor-section-label">Étapes</p>
+
+          <!-- Zone scrollable de étapes -->
+            <div class="task-editor-steps-scroll" id="divTaskEditorStepParent">
+
+              <div class="task-editor-step-row">
+                <button class="task-editor-step-drag">⋮⋮</button>
+                <input type="checkbox" class="task-editor-step-checkbox" />
+                <div class="task-editor-step-text" contenteditable="true">
+                  Présenter les objectifs et le planning
+                </div>
+                <button class="task-editor-step-date">04 oct. 2024</button>
+                <button class="task-editor-step-alert">
+                  <img src="./images/IconeNotifyEnabled.webp" alt="Alerte">
+                </button>
+                <button class="task-editor-step-delete">
+                  <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+                </button>
+              </div>
+              <div class="task-editor-step-row">
+                <button class="task-editor-step-drag">⋮⋮</button>
+                <input type="checkbox" class="task-editor-step-checkbox" />
+                <div class="task-editor-step-text" contenteditable="true">
+                  Présenter les objectifs et le planning 2
+                </div>
+                <button class="task-editor-step-date">04 oct. 2024</button>
+                <button class="task-editor-step-alert">
+                  <img src="./images/IconeNotifyDisabled.webp" alt="Alerte">
+                </button>
+                <button class="task-editor-step-delete">
+                  <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+                </button>
+              </div>
+
+              <!-- Bouton à ajouter dynamiquement -->
+              <button class="task-editor-add-step-button">
+                + Ajouter une étape
+              </button>
+            </div>
+          </div>
+
+          <!-- Dates bas de carte -->
+          <div class="task-editor-dates-box">
+            <div class="task-editor-date-item">
+              <span class="task-editor-date-label">Début</span>
+              <button class="task-editor-date-value">19 sept. 2024</button>
+            </div>
+
+            <div class="task-editor-date-item">
+              <span class="task-editor-date-label">Fin</span>
+              <button class="task-editor-date-value">04 oct. 2024</button>
+            </div>
+          </div>
       </div>
-    </section>
-  </main>
-</div>
+
+        <div class="panel side-deadlines">
+          <h3>Échéances du mois</h3>
+          <div class="deadline">Bilan T1 — 15 avr.</div>
+          <div class="deadline green">Campagne de printemps — 30 avr.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="./scripts/app.js"></script>
+  <script src="./scripts/noteSystem.js"></script>
 </body>
 </html>
