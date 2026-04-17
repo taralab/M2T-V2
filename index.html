@@ -43,10 +43,10 @@
             Trie :
           </label>
 
-          <select class="task-toolbar-filter-select" id="taskFilterSelect">
-            <option>Statut</option>
-            <option>Catégorie</option>
-            <option>Urgence</option>
+          <select class="task-toolbar-filter-select" id="taskFilterSelect" onchange="onChangeSortType()">
+            <option value="status">Statut</option>
+            <option value="priority">Priorité</option>
+            <option value="category">Catégorie</option>
           </select>
         </div>
 
