@@ -307,20 +307,105 @@ let allUserNoteList = {
   }
 };
 
-let noteToInsert = {
-    category : "",
-    title : "",
-    dateCreated : "format stamp ?",
-    dateLastModification : "format stamp ?",
-    dateStart : "format stamp ?",
-    dateEnd :  "format stamp ?",
-    status : "",
-    stepArray : {},
-    detail : "",
-    priority : "",
-};
 
 
+// let noteToInsert = {
+//     category : "",
+//     title : "",
+//     dateCreated : "format stamp ?",
+//     dateLastModification : "format stamp ?",
+//     dateStart : "format stamp ?",
+//     dateEnd :  "format stamp ?",
+//     status : "",
+//     stepArray : {},
+//     detail : "",
+//     priority : "",
+// };
+
+
+
+//  -------------------------- Référencement--------------------------------
+
+
+
+
+
+let taskSortSelectRef = document.getElementById("taskSortSelect"),
+  inputTaskSearchRef = document.getElementById("inputTaskSearch"),
+  divItemNoteListParentRef = document.getElementById("divItemNoteListParent");
+
+// Editeur de note
+let  btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
+  btnTaskEditorPrintRef = document.getElementById("btnTaskEditorPrint"),
+  btnTaskEditorDelete = document.getElementById("btnTaskEditorDelete"),
+  selectTaskEditorPriorityRef = document.getElementById("selectTaskEditorPriority"),
+  selectTaskEditorStatusRef = document.getElementById("selectTaskEditorStatus"),
+  inputTaskEditorCategoryRef = document.getElementById("inputTaskEditorCategory"),
+  inputTaskEditorTitleRef = document.getElementById("inputTaskEditorTitle"),
+  textareaTaskEditorDetailRef = document.getElementById("textareaTaskEditorDetail"),
+  divTaskEditorStepParentRef = document.getElementById("divTaskEditorStepParent"),
+  btnTaskEditorAddStepRef = document.getElementById("btnTaskEditorAddStep"),
+  btnTaskEditorDateStartRef = document.getElementById("btnTaskEditorDateStart"),
+  btnTaskEditorDateEndRef = document.getElementById("btnTaskEditorDateEnd");
+
+
+
+
+
+
+// *  * * * * * *   *   * * ecouteur d'évènement
+
+
+
+
+function onAddEventListenerForMainItems() {
+  // Les tries et recherches
+  const changeSortType = () => onChangeSortType();
+  taskSortSelectRef.addEventListener("change",changeSortType)
+  onAddEventListenerInRegistry("persistantItems",taskSortSelectRef,"change",changeSortType);
+
+  
+
+  // Lors de la saisie utilisateur (avec debounce)
+  const onSearchTask = debounce(onSearchInput, 300);
+  inputTaskSearchRef.addEventListener("input",onSearchTask);
+  onAddEventListenerInRegistry("persistantItems",inputTaskSearchRef,"input",onSearchTask);
+
+
+
+  //l'editeur de tache
+
+  // Valider
+
+
+  //imprimer
+
+  //Supprimer
+
+  //priority
+
+  //status
+
+  //Category
+  const inputCategory = (event) => onCategoryInput(event);
+  inputTaskEditorCategoryRef.addEventListener("input",inputCategory);
+  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorCategoryRef,"input",inputCategory);
+
+  //title
+  const inputTitle = (event) => onTitleInput(event);
+  inputTaskEditorTitleRef.addEventListener("input",inputTitle);
+  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorTitleRef,"input",inputTitle);
+
+  //detail
+
+
+  //step
+
+  //Date start
+
+  //date end
+
+}
 
 
 
@@ -331,39 +416,29 @@ let noteToInsert = {
 
 class ItemNoteList {
 
-  constructor(
-    key,
-    parentRef,
-    urgence,
-    category,
-    title,
-    percentValue,
-    meta = {},
-    stepArray = []
-  ) {
+  constructor(key, parentRef, urgence, category, title, percentValue, meta = {}) {
 
     this.key = key;
+
+    // 🔥 enregistrement de l'instance dans le registry global
+    itemTaskInstance.set(this.key, this);
+
     this.parentRef = parentRef;
-    this.urgence = urgence;
     this.category = category;
     this.title = title;
     this.percentValue = percentValue;
 
-    // 🔎 meta recherche
     this.matchIn = meta.matchIn || [];
     this.highlight = meta.highlight || [];
 
-    this.stepArray = stepArray;
-
-    // 📦 container principal
     this.container = document.createElement("div");
     this.container.classList.add("task-list-item");
-    this.container.id = `divContainerItemList_${this.key}`;
+    // Click dessus
+    this.container.addEventListener("click",()=>{
+      openTaskEditor(this.key);
+    });
 
-    // 🎨 rendu
     this.render();
-
-    // 📌 insertion DOM
     this.parentRef.appendChild(this.container);
   }
 
@@ -445,6 +520,27 @@ class ItemNoteList {
       </div>
     `;
   }
+
+
+  update(data) {
+    // 🔄 update title
+    if (data.title !== undefined) {
+      this.title = data.title;
+    }
+
+    // 🔄 update category
+    if (data.category !== undefined) {
+      this.category = data.category;
+    }
+
+    // 🔄 update progression
+    if (data.percentValue !== undefined) {
+      this.percentValue = data.percentValue;
+    }
+
+    // 🎨 re-render visuel
+    this.render();
+  }
 }
 
 
@@ -453,7 +549,7 @@ class ItemNoteList {
 // Quand l’utilisateur change le type de tri
 function onChangeSortType() {
 
-  uiState.sortType = document.getElementById("taskFilterSelect").value;
+  uiState.sortType = document.getElementById("taskSortSelect").value;
 
   // On réutilise la recherche actuelle
   refreshUI();
@@ -481,6 +577,10 @@ function refreshUI() {
 
 // Affichage complet de la liste (tri + groupage + UI)
 function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
+  // Avant de reconstruire toute la liste
+  // on vide les anciennes instances
+  itemTaskInstance.clear();
+
 
   // 📌 container principal
   const parentRef = document.getElementById("divItemNoteListParent");
@@ -577,7 +677,14 @@ function computeTaskProgress(stepArray) {
 
 
 
+
+
+
 //  *   *   *   *   *   *   * TRIE *    *   *   *   *   *   *   *   *   
+
+
+
+
 
 // Fonction de trie d'abord sur soit la priorité, la catégorie ou le status
 // Puis sur le titre
@@ -655,30 +762,19 @@ function groupSortedIds(allUserNoteList, sortedIds, sortType) {
 
 
 // RECHERCHE
+
+
+
+
 // État global de l’UI (source de vérité)
 let uiState = {
   sortType: "status",     // tri actuel
-  searchQuery: ""         // texte de recherche actuel
+  searchQuery: "",         // texte de recherche actuel
+  currentEditId: null // 🔥 ID de la note en cours d'édition
 };
 
 
-// Fonction debounce : limite les appels répétés
-function debounce(fn, delay = 300) {
-  let timeout;
 
-  return (...args) => {
-    clearTimeout(timeout);
-    timeout = setTimeout(() => fn(...args), delay);
-  };
-}
-
-// Lors de la saisie utilisateur (avec debounce)
-const inputSearch = document.getElementById("inputTaskSearch");
-
-inputSearch.addEventListener(
-  "input",
-  debounce(onSearchInput, 300)
-);
 
 
 
@@ -756,8 +852,149 @@ function searchNotes(query) {
 }
 
 
-eventUpdateList("status");
 
+
+
+
+
+// *  * * * * * * *EDITEUR/MODIFICATION * * * * * * * * *   
+
+
+
+function openTaskEditor(noteId) {
+
+  // 🔥 on stocke l'ID actif
+  uiState.currentEditId = noteId;
+
+  const data = allUserNoteList[noteId];
+
+  console.log(data);
+
+  // ici tu remplis ton éditeur avec les données
+  onSetTaskEditor(data);
+}
+
+
+
+
+
+// Set les éléments dans l'editeur
+function onSetTaskEditor(data) {
+  inputTaskEditorCategoryRef.value = data.category;
+  inputTaskEditorTitleRef.value = data.title;
+  textareaTaskEditorDetailRef.value = data.detail;
+}
+
+
+
+
+
+
+
+
+// Met à jour une seule ligne de la liste à partir du state global
+function syncListItem(id) {
+
+  // 🔍 récupérer instance UI
+  const item = itemTaskInstance.get(id);
+
+  // si pas affiché → rien à faire
+  if (!item) return;
+
+  // 📦 source de vérité
+  const data = allUserNoteList[id];
+
+  // 🔄 mise à jour ciblée de l'UI
+  item.update({
+    title: data.title,
+    category: data.category,
+    percentValue: computeTaskProgress(data.stepArray)
+  });
+}
+
+
+
+// Stocke toutes les instances affichées dans la liste
+// clé = id de la note
+const itemTaskInstance = new Map();
+
+
+
+//modification categorie
+function onCategoryInput(e) {
+  debouncedUpdateCategory(e.target.value);
+}
+// debounce global pour la categorie
+const debouncedUpdateCategory = debounce((newCategory) => {
+
+  const id = uiState.currentEditId;
+  if (!id) return;
+
+  // 🧠 update state
+  allUserNoteList[id].category = newCategory;
+
+  // 🔄 sync UI
+  syncListItem(id);
+
+}, 300);
+
+
+
+// Modification du titre
+function onTitleInput(e) {
+  debouncedUpdateTitle(e.target.value);
+}
+
+// debounce global pour le titre
+const debouncedUpdateTitle = debounce((newTitle) => {
+
+  const id = uiState.currentEditId;
+  if (!id) return;
+
+  // 🧠 update state
+  allUserNoteList[id].title = newTitle;
+
+  // 🔄 sync UI
+  syncListItem(id);
+
+}, 300);
+
+
+// exemple : toggle checkbox step
+function onStepToggle(noteId) {
+
+  debounce(() => {
+
+    // 🧠 update state
+    const task = allUserNoteList[noteId];
+
+    task.percentValue = computeTaskProgress(task.stepArray);
+
+    // 🔄 sync UI uniquement
+    syncListItem(noteId);
+
+  }, 200)();
+}
+
+
+// si le changement impacte le groupement → refresh global
+function handleSortChange() {
+
+  uiState.sortType =
+    document.getElementById("taskSortSelect").value;
+
+  // 🚨 ici on rebuild tout
+  refreshUI();
+}
+
+
+
+
+
+
+
+eventUpdateList("status");
+onAddEventListenerForMainItems();
 
 
 

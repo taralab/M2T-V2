@@ -39,11 +39,11 @@
         
         <!-- Bloc filtre -->
         <div class="task-toolbar-filter-group">
-          <label class="task-toolbar-filter-label" for="taskFilterSelect">
+          <label class="task-toolbar-filter-label" for="taskSortSelect">
             Trie :
           </label>
 
-          <select class="task-toolbar-filter-select" id="taskFilterSelect" onchange="onChangeSortType()">
+          <select class="task-toolbar-filter-select" id="taskSortSelect">
             <option value="status">Statut</option>
             <option value="priority">Priorité</option>
             <option value="category">Catégorie</option>
@@ -60,44 +60,7 @@
       </div>
       <section class="grid">
         <div class="panel" id="divItemNoteListParent">
-          <div class="label">EN COURS (2)</div>
-
-
-        <!-- =============================
-              CARTE TÂCHE
-          ============================= -->
-          <div class="task-list-item">
-
-            <!-- image / icône -->
-            <div class="task-list-item-image"></div>
-
-            <!-- contenu -->
-            <div class="task-list-item-content">
-
-              <!-- ligne du haut -->
-              <div class="task-list-item-header">
-                
-                <div class="task-list-item-texts">
-                  <span class="task-list-item-category">[ Gestion de projet ]</span>
-                  <div class="task-list-item-title">
-                    Finalisation du budget pour le projet marketing
-                  </div>
-                </div>
-
-                <div class="task-list-item-percentage">40%</div>
-
-              </div>
-
-              <!-- barre de progression -->
-              <div class="task-list-item-progress">
-                <div class="task-list-item-progress-bar" style="width: 40%;"></div>
-              </div>
-
-            </div>
-          </div>
-
-          <div class="label" style="margin-top:22px">À FAIRE (7)</div>
-
+          <!-- Injection de la liste des taches -->
         </div>
 
       <!-- =============================
@@ -125,7 +88,7 @@
           <div class="task-editor-toolbar-meta">
             <div class="task-editor-toolbar-meta-item">
               <span class="task-editor-toolbar-meta-label">Urgence</span>
-              <select class="task-editor-toolbar-select" id="selectTaskEditorUrgence">
+              <select class="task-editor-toolbar-select" id="selectTaskEditorPriority">
                 <option>Basse</option>
                 <option selected>Moyenne</option>
                 <option>Haute</option>
@@ -205,7 +168,7 @@
               </div>
 
               <!-- Bouton à ajouter dynamiquement -->
-              <button class="task-editor-add-step-button">
+              <button class="task-editor-add-step-button" id="btnTaskEditorAddStep">
                 + Ajouter une étape
               </button>
             </div>
@@ -215,12 +178,12 @@
           <div class="task-editor-dates-box">
             <div class="task-editor-date-item">
               <span class="task-editor-date-label">Début</span>
-              <button class="task-editor-date-value">19 sept. 2024</button>
+              <button class="task-editor-date-value" id="btnTaskEditorDateStart">19 sept. 2024</button>
             </div>
 
             <div class="task-editor-date-item">
               <span class="task-editor-date-label">Fin</span>
-              <button class="task-editor-date-value">04 oct. 2024</button>
+              <button class="task-editor-date-value" id="btnTaskEditorDateEnd">04 oct. 2024</button>
             </div>
           </div>
       </div>
@@ -234,7 +197,9 @@
     </main>
   </div>
 
+  <script src="./scripts/globalFunction.js"></script>
   <script src="./scripts/app.js"></script>
   <script src="./scripts/noteSystem.js"></script>
+
 </body>
 </html>
