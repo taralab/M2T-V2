@@ -466,6 +466,22 @@
   color: #1f2937;
 }
 
+
+/* surlignage recherche */
+.highlight {
+  background: yellow;
+  color: black;
+  padding: 0 2px;
+  border-radius: 2px;
+}
+
+/* info "trouvé dans" */
+.task-list-item-match {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-top: 4px;
+}
+
 /* =============================
    BARRE DE PROGRESSION
 ============================= */

@@ -329,64 +329,123 @@ let noteToInsert = {
 
 // *    *   *   *   *   *   *   *   Class   *   *   *   *   *   *   *   *   *
 
-
-
-
 class ItemNoteList {
-    constructor(key,parentRef,urgence,category,title,percentValue) {
-        this.key = key;
-        this.parentRef = parentRef;
-        this.urgence = urgence;
-        this.category = category;
-        this.title = title;
-        this.percentValue = percentValue;
 
-        // Création du container principal
+  constructor(
+    key,
+    parentRef,
+    urgence,
+    category,
+    title,
+    percentValue,
+    meta = {},
+    stepArray = []
+  ) {
 
-        this.container = document.createElement("div");
-        this.container.classList.add("task-list-item");
-        this.container.id = `divContainerItemList_${this.key}`;
+    this.key = key;
+    this.parentRef = parentRef;
+    this.urgence = urgence;
+    this.category = category;
+    this.title = title;
+    this.percentValue = percentValue;
 
+    // 🔎 meta recherche
+    this.matchIn = meta.matchIn || [];
+    this.highlight = meta.highlight || [];
 
-        //rendu
-        this.render();
+    this.stepArray = stepArray;
 
-        //insertion dans le parent
-        this.parentRef.appendChild(this.container);
-    }
+    // 📦 container principal
+    this.container = document.createElement("div");
+    this.container.classList.add("task-list-item");
+    this.container.id = `divContainerItemList_${this.key}`;
 
+    // 🎨 rendu
+    this.render();
 
-    render(){
-        this.container.innerHTML = `
-            <div class="task-list-item-image"></div>
+    // 📌 insertion DOM
+    this.parentRef.appendChild(this.container);
+  }
 
-            <!-- contenu -->
-            <div class="task-list-item-content">
+  // 🔧 fonction utilitaire de highlight
+  highlightText(text, query) {
 
-                <!-- ligne du haut -->
-                <div class="task-list-item-header">
-                
-                <div class="task-list-item-texts">
-                    <span class="task-list-item-category">[ ${this.category} ]</span>
-                    <div class="task-list-item-title">
-                    ${this.title}
-                    </div>
-                </div>
+    if (!query) return text;
 
-                <div class="task-list-item-percentage">${this.percentValue}%</div>
+    const q = query.toLowerCase();
 
-                </div>
+    return text.replace(
+      new RegExp(`(${q})`, "gi"),
+      `<span class="highlight">$1</span>`
+    );
+  }
 
-                <!-- barre de progression -->
-                <div class="task-list-item-progress">
-                <div class="task-list-item-progress-bar" style="width: ${this.percentValue}%;"></div>
-                </div>
+  render() {
+
+    const query = uiState.searchQuery;
+
+    // 🔍 badge "trouvé dans" (uniquement detail/steps)
+    const extraMatch =
+      this.matchIn.includes("detail") ||
+      this.matchIn.includes("steps");
+
+    const matchInfo = extraMatch
+      ? `<div class="task-list-item-match">
+           🔍 trouvé dans :
+           ${this.matchIn
+             .filter(x => x !== "title" && x !== "category")
+             .join(", ")}
+         </div>`
+      : "";
+
+    // 🧱 HTML principal
+    this.container.innerHTML = `
+      <div class="task-list-item-image"></div>
+
+      <div class="task-list-item-content">
+
+        <div class="task-list-item-header">
+
+          <div class="task-list-item-texts">
+
+            <!-- CATEGORY avec highlight -->
+            <span class="task-list-item-category">
+              [ ${this.highlight.includes("category")
+                ? this.highlightText(this.category, query)
+                : this.category} ]
+            </span>
+
+            <!-- TITLE avec highlight -->
+            <div class="task-list-item-title">
+              ${this.highlight.includes("title")
+                ? this.highlightText(this.title, query)
+                : this.title}
             </div>
-        `;
-    }
+
+            <!-- badge contextuel -->
+            ${matchInfo}
+
+          </div>
+
+          <!-- progression -->
+          <div class="task-list-item-percentage">
+            ${this.percentValue}%
+          </div>
+
+        </div>
+
+        <!-- barre progression -->
+        <div class="task-list-item-progress">
+          <div
+            class="task-list-item-progress-bar"
+            style="width: ${this.percentValue}%"
+          ></div>
+        </div>
+
+      </div>
+    `;
+  }
 }
-
-
 
 
 // *    *   *   *   *   *   Actualisation de la liste * *   *   *   *   *   *   *   
@@ -403,34 +462,50 @@ function onChangeSortType() {
 
 
 
-// Fonction centrale : applique search + sort + render
+// Fonction centrale : synchronise search + sort + render
 function refreshUI() {
 
-  // 1. On récupère les IDs filtrés par recherche
-  const filteredIds = searchNotes(uiState.searchQuery);
+  // 🔎 Résultat enrichi de la recherche
+  const searchResult = searchNotes(uiState.searchQuery);
 
-  // 2. On met à jour la liste avec tri + groupage
-  eventUpdateList(uiState.sortType, filteredIds);
+  // 📦 Liste des IDs visibles
+  const filteredIds = Object.keys(searchResult);
+
+  // 🎯 Rendu global
+  eventUpdateList(
+    uiState.sortType,
+    filteredIds,
+    searchResult
+  );
 }
 
-function eventUpdateList(sortType, filteredIds = null) {
+// Affichage complet de la liste (tri + groupage + UI)
+function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
 
+  // 📌 container principal
   const parentRef = document.getElementById("divItemNoteListParent");
+
+  // 🧹 reset UI
   parentRef.innerHTML = "";
 
-  // IDs de base (filtrés ou tout)
-  const baseIds = filteredIds || Object.keys(allUserNoteList);
+  // 📦 fallback si pas de filtre
+  const baseIds =
+    filteredIds && filteredIds.length > 0
+      ? filteredIds
+      : Object.keys(allUserNoteList);
 
-  // On reconstruit un dataset filtré
+  // 📦 dataset filtré
   const filteredData = Object.fromEntries(
     baseIds.map(id => [id, allUserNoteList[id]])
   );
 
-  // Tri + groupage
+  // 🔀 tri
   const sortedIds = getSortedNotesIds(filteredData, sortType);
+
+  // 📊 groupage
   const grouped = groupSortedIds(filteredData, sortedIds, sortType);
 
-  // Ordres métier
+  // 📌 ordre métier
   const groupOrderConfig = {
     priority: ["HIGH", "MEDIUM", "LOW"],
     status: ["status1", "status2", "status3"]
@@ -438,45 +513,56 @@ function eventUpdateList(sortType, filteredIds = null) {
 
   let orderedGroups;
 
+  // 📌 tri catégorie alphabétique
   if (sortType === "category") {
-    orderedGroups = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
+    orderedGroups = Object.keys(grouped)
+      .sort((a, b) => a.localeCompare(b));
   } else {
-    orderedGroups = groupOrderConfig[sortType] || Object.keys(grouped);
+    orderedGroups =
+      groupOrderConfig[sortType] || Object.keys(grouped);
   }
 
-  // Render UI
+  // 🖼️ rendu final
   orderedGroups.forEach(groupValue => {
 
     const ids = grouped[groupValue];
     if (!ids) return;
 
-    // Label du groupe
+    // 🏷️ label groupe
     const label = document.createElement("div");
     label.classList.add("label");
     label.textContent = `${groupValue.toUpperCase()} (${ids.length})`;
     parentRef.appendChild(label);
 
-    // Items
+    // 📄 items
     ids.forEach(id => {
+
       const data = allUserNoteList[id];
 
+      // 📊 progression steps
       const percent = computeTaskProgress(data.stepArray);
 
+      // 🔎 meta recherche (highlight + match info)
+      const meta = searchMeta[id] || {
+        matchIn: [],
+        highlight: []
+      };
+
+      // 🧱 composant UI
       new ItemNoteList(
         id,
         parentRef,
         data.priority,
         data.category,
         data.title,
-        percent
+        percent,
+        meta,
+        data.stepArray
       );
     });
 
   });
 }
-
-
-
 
 // Calcule le % de tâches terminées
 function computeTaskProgress(stepArray) {
@@ -603,42 +689,71 @@ function onSearchInput(e) {
 }
 
 
-// Retourne les IDs qui matchent la recherche
+// Recherche dans toutes les notes
+// Retourne :
+// - matchIn → où ça match (title/category/detail/steps)
+// - highlight → où on doit surligner (title/category uniquement)
 function searchNotes(query) {
+
+  // Normalisation de la recherche
   const q = query.toLowerCase().trim();
 
-  // Si rien n’est tapé → on retourne tout
+  // Cas vide → tout est visible, rien à highlight
   if (!q) {
-    return Object.keys(allUserNoteList);
+    return Object.fromEntries(
+      Object.keys(allUserNoteList).map(id => [
+        id,
+        {
+          matchIn: [],     // zones de correspondance
+          highlight: []    // zones à surligner
+        }
+      ])
+    );
   }
 
-  return Object.entries(allUserNoteList)
-    .filter(([id, note]) => matchesNote(note, q))
-    .map(([id]) => id);
+  const result = {};
+
+  // Parcours de toutes les notes
+  Object.entries(allUserNoteList).forEach(([id, note]) => {
+
+    const matchIn = [];   // info UX ("trouvé dans")
+    const highlight = []; // UI (surlignage jaune)
+
+    // 🔎 TITLE → visible + highlight
+    if (note.title?.toLowerCase().includes(q)) {
+      matchIn.push("title");
+      highlight.push("title");
+    }
+
+    // 🔎 CATEGORY → visible + highlight
+    if (note.category?.toLowerCase().includes(q)) {
+      matchIn.push("category");
+      highlight.push("category");
+    }
+
+    // 🔎 DETAIL → invisible dans liste → badge uniquement
+    if (note.detail?.toLowerCase().includes(q)) {
+      matchIn.push("detail");
+    }
+
+    // 🔎 STEPS → invisible dans liste → badge uniquement
+    if (note.stepArray?.some(step =>
+      step.text?.toLowerCase().includes(q)
+    )) {
+      matchIn.push("steps");
+    }
+
+    // Si au moins un match → on garde la note
+    if (matchIn.length > 0) {
+      result[id] = {
+        matchIn,
+        highlight
+      };
+    }
+  });
+
+  return result;
 }
-
-// Vérifie si une note correspond à la recherche
-function matchesNote(note, q) {
-
-  // recherche dans le titre
-  if (note.title?.toLowerCase().includes(q)) return true;
-
-  // recherche dans la catégorie
-  if (note.category?.toLowerCase().includes(q)) return true;
-
-  // recherche dans le détail
-  if (note.detail?.toLowerCase().includes(q)) return true;
-
-  // recherche dans les étapes
-  if (note.stepArray?.some(step =>
-    step.text?.toLowerCase().includes(q)
-  )) return true;
-
-  return false;
-}
-
-
-
 
 
 eventUpdateList("status");
