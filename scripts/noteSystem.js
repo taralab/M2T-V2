@@ -450,16 +450,7 @@ class ItemNoteList {
     this.parentRef.appendChild(this.container);
   }
 
-  // 🖼️ mapping priorité → image
-  getPriorityImage() {
-    const map = {
-      HIGH: "./images/IconePriorityHIGH.webp",
-      MEDIUM: "./images/IconePriorityMEDIUM.webp",
-      LOW: "./images/IconePriorityLOW.webp"
-    };
 
-    return map[this.priority] || map["LOW"]; // fallback sécurisé
-  }
 
   // 🔧 fonction utilitaire de highlight
   highlightText(text, query) {
@@ -476,6 +467,7 @@ class ItemNoteList {
   render() {
 
     const query = uiState.searchQuery;
+    const { icon, color } = this.getPriorityIcon();
 
     // 🔍 badge "trouvé dans"
     const extraMatch =
@@ -491,13 +483,11 @@ class ItemNoteList {
          </div>`
       : "";
 
-    // 🖼️ récupération dynamique de l'image
-    const priorityImg = this.getPriorityImage();
 
     // 🧱 HTML principal
     this.container.innerHTML = `
-      <div class="task-list-item-image">
-        <img src="${priorityImg}" alt="priority">
+      <div class="task-list-item-image" style="color: ${color}">
+        ${icon}
       </div>
 
       <div class="task-list-item-content">
@@ -569,7 +559,34 @@ class ItemNoteList {
     this.render();
   }
 
+  getPriorityIcon() {
+    const map = {
+      HIGH: {
+        icon: "⚡",
+        color: "#FF4D4F"
+      },
 
+      MEDIUM: {
+        icon: `
+          <svg viewBox="0 0 24 24" class="priority-icon">
+            <rect x="4" y="11" width="16" height="2" rx="1"/>
+          </svg>
+        `,
+        color: "#D98E2F"
+      },
+
+      LOW: {
+        icon: `
+          <svg viewBox="0 0 24 24" class="priority-icon">
+            <circle cx="12" cy="12" r="3"/>
+          </svg>
+        `,
+        color: "#5B6FE5"
+      }
+    };
+
+    return map[this.priority] || map["LOW"];
+  }
 
 }
 
