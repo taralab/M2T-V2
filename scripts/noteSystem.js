@@ -391,26 +391,46 @@ class ItemNoteList {
 
 // *    *   *   *   *   *   Actualisation de la liste * *   *   *   *   *   *   *   
 
+// Quand l’utilisateur change le type de tri
 function onChangeSortType() {
-    
-    let newSortType = document.getElementById("taskFilterSelect").value;
 
-    eventUpdateList(newSortType);
+  uiState.sortType = document.getElementById("taskFilterSelect").value;
+
+  // On réutilise la recherche actuelle
+  refreshUI();
 }
 
 
 
 
+// Fonction centrale : applique search + sort + render
+function refreshUI() {
 
-function eventUpdateList(sortType) {
+  // 1. On récupère les IDs filtrés par recherche
+  const filteredIds = searchNotes(uiState.searchQuery);
 
-  const sortedIds = getSortedNotesIds(allUserNoteList, sortType);
-  const grouped = groupSortedIds(allUserNoteList, sortedIds, sortType);
+  // 2. On met à jour la liste avec tri + groupage
+  eventUpdateList(uiState.sortType, filteredIds);
+}
+
+function eventUpdateList(sortType, filteredIds = null) {
 
   const parentRef = document.getElementById("divItemNoteListParent");
   parentRef.innerHTML = "";
 
-  // 🔹 Ordres métier fixes
+  // IDs de base (filtrés ou tout)
+  const baseIds = filteredIds || Object.keys(allUserNoteList);
+
+  // On reconstruit un dataset filtré
+  const filteredData = Object.fromEntries(
+    baseIds.map(id => [id, allUserNoteList[id]])
+  );
+
+  // Tri + groupage
+  const sortedIds = getSortedNotesIds(filteredData, sortType);
+  const grouped = groupSortedIds(filteredData, sortedIds, sortType);
+
+  // Ordres métier
   const groupOrderConfig = {
     priority: ["HIGH", "MEDIUM", "LOW"],
     status: ["status1", "status2", "status3"]
@@ -419,30 +439,28 @@ function eventUpdateList(sortType) {
   let orderedGroups;
 
   if (sortType === "category") {
-    // 🔸 Tri alphabétique dynamique
-    orderedGroups = Object.keys(grouped)
-      .sort((a, b) => a.localeCompare(b));
+    orderedGroups = Object.keys(grouped).sort((a, b) => a.localeCompare(b));
   } else {
-    // 🔸 Ordre métier si défini
     orderedGroups = groupOrderConfig[sortType] || Object.keys(grouped);
   }
 
+  // Render UI
   orderedGroups.forEach(groupValue => {
 
     const ids = grouped[groupValue];
     if (!ids) return;
 
-    // 🔹 Label
+    // Label du groupe
     const label = document.createElement("div");
     label.classList.add("label");
     label.textContent = `${groupValue.toUpperCase()} (${ids.length})`;
     parentRef.appendChild(label);
 
-    // 🔹 Items
+    // Items
     ids.forEach(id => {
       const data = allUserNoteList[id];
 
-      const stepPercent = computeTaskProgress(data.stepArray);
+      const percent = computeTaskProgress(data.stepArray);
 
       new ItemNoteList(
         id,
@@ -450,7 +468,7 @@ function eventUpdateList(sortType) {
         data.priority,
         data.category,
         data.title,
-        stepPercent
+        percent
       );
     });
 
@@ -460,9 +478,9 @@ function eventUpdateList(sortType) {
 
 
 
-
-//calcul du pourcentage de d'étape validée
+// Calcule le % de tâches terminées
 function computeTaskProgress(stepArray) {
+
   if (!stepArray || stepArray.length === 0) return 0;
 
   const total = stepArray.length;
@@ -470,7 +488,6 @@ function computeTaskProgress(stepArray) {
 
   return Math.round((done / total) * 100);
 }
-
 
 
 
@@ -550,6 +567,75 @@ function groupSortedIds(allUserNoteList, sortedIds, sortType) {
 }
 
 
+
+// RECHERCHE
+// État global de l’UI (source de vérité)
+let uiState = {
+  sortType: "status",     // tri actuel
+  searchQuery: ""         // texte de recherche actuel
+};
+
+
+// Fonction debounce : limite les appels répétés
+function debounce(fn, delay = 300) {
+  let timeout;
+
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn(...args), delay);
+  };
+}
+
+// Lors de la saisie utilisateur (avec debounce)
+const inputSearch = document.getElementById("inputTaskSearch");
+
+inputSearch.addEventListener(
+  "input",
+  debounce(onSearchInput, 300)
+);
+
+
+
+// Mise à jour de l’état + refresh global
+function onSearchInput(e) {
+  uiState.searchQuery = e.target.value;
+  refreshUI();
+}
+
+
+// Retourne les IDs qui matchent la recherche
+function searchNotes(query) {
+  const q = query.toLowerCase().trim();
+
+  // Si rien n’est tapé → on retourne tout
+  if (!q) {
+    return Object.keys(allUserNoteList);
+  }
+
+  return Object.entries(allUserNoteList)
+    .filter(([id, note]) => matchesNote(note, q))
+    .map(([id]) => id);
+}
+
+// Vérifie si une note correspond à la recherche
+function matchesNote(note, q) {
+
+  // recherche dans le titre
+  if (note.title?.toLowerCase().includes(q)) return true;
+
+  // recherche dans la catégorie
+  if (note.category?.toLowerCase().includes(q)) return true;
+
+  // recherche dans le détail
+  if (note.detail?.toLowerCase().includes(q)) return true;
+
+  // recherche dans les étapes
+  if (note.stepArray?.some(step =>
+    step.text?.toLowerCase().includes(q)
+  )) return true;
+
+  return false;
+}
 
 
 
