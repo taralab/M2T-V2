@@ -324,6 +324,12 @@ let allUserNoteList = {
 
 
 
+// Stocke toutes les instances affichées dans la liste
+// clé = id de la note
+const itemTaskInstance = new Map();
+
+
+
 //  -------------------------- Référencement--------------------------------
 
 
@@ -416,7 +422,7 @@ function onAddEventListenerForMainItems() {
 
 class ItemNoteList {
 
-  constructor(key, parentRef, urgence, category, title, percentValue, meta = {}) {
+  constructor(key, parentRef, priority, category, title, percentValue, meta = {}) {
 
     this.key = key;
 
@@ -424,6 +430,7 @@ class ItemNoteList {
     itemTaskInstance.set(this.key, this);
 
     this.parentRef = parentRef;
+    this.priority = priority;
     this.category = category;
     this.title = title;
     this.percentValue = percentValue;
@@ -475,7 +482,8 @@ class ItemNoteList {
 
     // 🧱 HTML principal
     this.container.innerHTML = `
-      <div class="task-list-item-image"></div>
+      <div class="task-list-item-image">
+      </div>
 
       <div class="task-list-item-content">
 
@@ -520,6 +528,8 @@ class ItemNoteList {
       </div>
     `;
   }
+
+
 
 
   update(data) {
@@ -683,11 +693,11 @@ function computeTaskProgress(stepArray) {
 //  *   *   *   *   *   *   * TRIE *    *   *   *   *   *   *   *   *   
 
 
+// Fonction de tri des notes avec hiérarchie dynamique :
+// 1. Critère principal → sortType (priority, category, status, etc.)
+// 2. Critère secondaire → category (sauf si déjà utilisé en principal)
+// 3. Critère tertiaire → title
 
-
-
-// Fonction de trie d'abord sur soit la priorité, la catégorie ou le status
-// Puis sur le titre
 function getSortedNotesIds(allUserNoteList, sortType) {
   const priorityOrder = {
     HIGH: 1,
@@ -699,16 +709,18 @@ function getSortedNotesIds(allUserNoteList, sortType) {
     .map(([id, obj]) => ({ id, ...obj }))
     .sort((a, b) => {
 
-      // 🔴 Cas spécial PRIORITY
+      // 🥇 1. TRI PRINCIPAL
       if (sortType === "priority") {
+        // Cas particulier : ordre personnalisé
         const prioA = priorityOrder[a.priority] || 999;
         const prioB = priorityOrder[b.priority] || 999;
 
         if (prioA !== prioB) {
           return prioA - prioB;
         }
+
       } else {
-        // 🟢 Cas standard (category, status, etc.)
+        // Cas standard : tri alphabétique sur la propriété ciblée
         const valA = (a[sortType] || "").toLowerCase();
         const valB = (b[sortType] || "").toLowerCase();
 
@@ -716,18 +728,28 @@ function getSortedNotesIds(allUserNoteList, sortType) {
         if (valA > valB) return 1;
       }
 
-      // 🔵 fallback sur title
+      // 🥈 2. TRI SECONDAIRE → CATEGORY
+      // On évite la redondance si le tri principal est déjà "category"
+      if (sortType !== "category") {
+        const catA = (a.category || "").toLowerCase();
+        const catB = (b.category || "").toLowerCase();
+
+        if (catA < catB) return -1;
+        if (catA > catB) return 1;
+      }
+
+      // 🥉 3. TRI TERTIAIRE → TITLE (fallback final)
       const titleA = (a.title || "").toLowerCase();
       const titleB = (b.title || "").toLowerCase();
 
       if (titleA < titleB) return -1;
       if (titleA > titleB) return 1;
 
+      // Égalité complète
       return 0;
     })
     .map(item => item.id);
 }
-
 
 // Fonction de groupement
 function groupSortedIds(allUserNoteList, sortedIds, sortType) {
@@ -913,10 +935,6 @@ function syncListItem(id) {
 }
 
 
-
-// Stocke toutes les instances affichées dans la liste
-// clé = id de la note
-const itemTaskInstance = new Map();
 
 
 
