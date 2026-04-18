@@ -7,10 +7,33 @@ let allUserNoteList = {
     dateStart: "2026-04-15",
     dateEnd: "2026-04-20",
     status: "status1",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_k29fla",
+        text: "Collecter les données financières",
+        checked: true,
+        date: "2026-04-15",
+        alert: false
+      },
+      {
+        id: "stp_x82mdp",
+        text: "Analyser les écarts budgétaires",
+        checked: false,
+        date: "2026-04-17",
+        alert: true
+      },
+      {
+        id: "stp_q91lzn",
+        text: "Rédiger le rapport de synthèse",
+        checked: false,
+        date: "2026-04-19",
+        alert: false
+      }
+    ],
     detail: "Préparer analyse financière",
     priority: "HIGH"
   },
+
   "id_2": {
     category: "SSI",
     title: "Audit sécurité serveur",
@@ -19,10 +42,33 @@ let allUserNoteList = {
     dateStart: "2026-04-06",
     dateEnd: "2026-04-18",
     status: "status2",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_p82jfa",
+        text: "Lister les accès utilisateurs",
+        checked: true,
+        date: "2026-04-06",
+        alert: false
+      },
+      {
+        id: "stp_v73nke",
+        text: "Analyser les logs de connexion",
+        checked: true,
+        date: "2026-04-10",
+        alert: false
+      },
+      {
+        id: "stp_b19xqw",
+        text: "Identifier les failles potentielles",
+        checked: false,
+        date: "2026-04-15",
+        alert: true
+      }
+    ],
     detail: "Audit des accès",
     priority: "MEDIUM"
   },
+
   "id_3": {
     category: "REUNION",
     title: "Point équipe hebdo",
@@ -31,10 +77,26 @@ let allUserNoteList = {
     dateStart: "2026-04-17",
     dateEnd: "2026-04-17",
     status: "status1",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_h52lks",
+        text: "Préparer l'ordre du jour",
+        checked: true,
+        date: "2026-04-16",
+        alert: false
+      },
+      {
+        id: "stp_j91zpe",
+        text: "Animer la réunion",
+        checked: false,
+        date: "2026-04-17",
+        alert: false
+      }
+    ],
     detail: "Réunion équipe",
     priority: "LOW"
   },
+
   "id_4": {
     category: "DIVERS",
     title: "Organisation bureau",
@@ -43,10 +105,11 @@ let allUserNoteList = {
     dateStart: "2026-04-02",
     dateEnd: "2026-04-25",
     status: "status3",
-    stepArray: {},
+    stepArray: [],
     detail: "Rangement et tri",
     priority: "LOW"
   },
+
   "id_5": {
     category: "RRF",
     title: "Clôture mensuelle",
@@ -55,10 +118,26 @@ let allUserNoteList = {
     dateStart: "2026-04-03",
     dateEnd: "2026-04-10",
     status: "status2",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_m28dkq",
+        text: "Vérifier les écritures comptables",
+        checked: true,
+        date: "2026-04-04",
+        alert: false
+      },
+      {
+        id: "stp_r47xna",
+        text: "Valider les comptes",
+        checked: true,
+        date: "2026-04-08",
+        alert: false
+      }
+    ],
     detail: "Clôture comptable",
     priority: "HIGH"
   },
+
   "id_6": {
     category: "SSI",
     title: "Mise à jour firewall",
@@ -67,10 +146,33 @@ let allUserNoteList = {
     dateStart: "2026-04-16",
     dateEnd: "2026-04-19",
     status: "status3",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_c91vle",
+        text: "Sauvegarder la configuration actuelle",
+        checked: true,
+        date: "2026-04-16",
+        alert: false
+      },
+      {
+        id: "stp_d82kfa",
+        text: "Appliquer la mise à jour",
+        checked: false,
+        date: "2026-04-18",
+        alert: true
+      },
+      {
+        id: "stp_t73plm",
+        text: "Tester les règles réseau",
+        checked: false,
+        date: "2026-04-19",
+        alert: false
+      }
+    ],
     detail: "Upgrade sécurité",
     priority: "HIGH"
   },
+
   "id_7": {
     category: "REUNION",
     title: "Réunion client projet X",
@@ -79,10 +181,19 @@ let allUserNoteList = {
     dateStart: "2026-04-08",
     dateEnd: "2026-04-08",
     status: "status2",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_n12kwe",
+        text: "Préparer les supports de présentation",
+        checked: true,
+        date: "2026-04-07",
+        alert: false
+      }
+    ],
     detail: "Suivi client",
     priority: "MEDIUM"
   },
+
   "id_8": {
     category: "DIVERS",
     title: "Commande fournitures",
@@ -91,10 +202,33 @@ let allUserNoteList = {
     dateStart: "2026-04-11",
     dateEnd: "2026-04-15",
     status: "status1",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_y82mds",
+        text: "Lister les besoins en matériel",
+        checked: true,
+        date: "2026-04-11",
+        alert: false
+      },
+      {
+        id: "stp_u77lqp",
+        text: "Comparer les fournisseurs",
+        checked: false,
+        date: "2026-04-13",
+        alert: false
+      },
+      {
+        id: "stp_w55zbn",
+        text: "Passer la commande",
+        checked: false,
+        date: "2026-04-14",
+        alert: true
+      }
+    ],
     detail: "Commander matériel",
     priority: "LOW"
   },
+
   "id_9": {
     category: "RRF",
     title: "Prévisionnel annuel",
@@ -103,10 +237,33 @@ let allUserNoteList = {
     dateStart: "2026-03-05",
     dateEnd: "2026-04-30",
     status: "status3",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_f19dke",
+        text: "Collecter les historiques financiers",
+        checked: true,
+        date: "2026-03-10",
+        alert: false
+      },
+      {
+        id: "stp_g28slx",
+        text: "Construire les hypothèses budgétaires",
+        checked: false,
+        date: "2026-04-05",
+        alert: false
+      },
+      {
+        id: "stp_k55pld",
+        text: "Valider le prévisionnel avec la direction",
+        checked: false,
+        date: "2026-04-28",
+        alert: true
+      }
+    ],
     detail: "Budget annuel",
     priority: "MEDIUM"
   },
+
   "id_10": {
     category: "SSI",
     title: "Test intrusion",
@@ -115,12 +272,40 @@ let allUserNoteList = {
     dateStart: "2026-04-12",
     dateEnd: "2026-04-22",
     status: "status1",
-    stepArray: {},
+    stepArray: [
+      {
+        id: "stp_l92kfa",
+        text: "Définir le périmètre du test",
+        checked: true,
+        date: "2026-04-12",
+        alert: false
+      },
+      {
+        id: "stp_z81mqp",
+        text: "Lancer les scans de vulnérabilité",
+        checked: false,
+        date: "2026-04-15",
+        alert: false
+      },
+      {
+        id: "stp_e73xnb",
+        text: "Exploiter les failles détectées",
+        checked: false,
+        date: "2026-04-18",
+        alert: true
+      },
+      {
+        id: "stp_r44plk",
+        text: "Rédiger le rapport de pentest",
+        checked: false,
+        date: "2026-04-21",
+        alert: false
+      }
+    ],
     detail: "Pentest interne",
     priority: "HIGH"
   }
 };
-
 
 let noteToInsert = {
     category : "",
@@ -257,17 +442,33 @@ function eventUpdateList(sortType) {
     ids.forEach(id => {
       const data = allUserNoteList[id];
 
+      const stepPercent = computeTaskProgress(data.stepArray);
+
       new ItemNoteList(
         id,
         parentRef,
         data.priority,
         data.category,
         data.title,
-        80
+        stepPercent
       );
     });
 
   });
+}
+
+
+
+
+
+//calcul du pourcentage de d'étape validée
+function computeTaskProgress(stepArray) {
+  if (!stepArray || stepArray.length === 0) return 0;
+
+  const total = stepArray.length;
+  const done = stepArray.filter(step => step.checked).length;
+
+  return Math.round((done / total) * 100);
 }
 
 
