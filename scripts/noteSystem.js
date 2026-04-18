@@ -440,8 +440,9 @@ class ItemNoteList {
 
     this.container = document.createElement("div");
     this.container.classList.add("task-list-item");
+
     // Click dessus
-    this.container.addEventListener("click",()=>{
+    this.container.addEventListener("click", () => {
       openTaskEditor(this.key);
     });
 
@@ -449,9 +450,19 @@ class ItemNoteList {
     this.parentRef.appendChild(this.container);
   }
 
+  // 🖼️ mapping priorité → image
+  getPriorityImage() {
+    const map = {
+      HIGH: "./images/IconePriorityHIGH.webp",
+      MEDIUM: "./images/IconePriorityMEDIUM.webp",
+      LOW: "./images/IconePriorityLOW.webp"
+    };
+
+    return map[this.priority] || map["LOW"]; // fallback sécurisé
+  }
+
   // 🔧 fonction utilitaire de highlight
   highlightText(text, query) {
-
     if (!query) return text;
 
     const q = query.toLowerCase();
@@ -466,7 +477,7 @@ class ItemNoteList {
 
     const query = uiState.searchQuery;
 
-    // 🔍 badge "trouvé dans" (uniquement detail/steps)
+    // 🔍 badge "trouvé dans"
     const extraMatch =
       this.matchIn.includes("detail") ||
       this.matchIn.includes("steps");
@@ -480,9 +491,13 @@ class ItemNoteList {
          </div>`
       : "";
 
+    // 🖼️ récupération dynamique de l'image
+    const priorityImg = this.getPriorityImage();
+
     // 🧱 HTML principal
     this.container.innerHTML = `
       <div class="task-list-item-image">
+        <img src="${priorityImg}" alt="priority">
       </div>
 
       <div class="task-list-item-content">
@@ -491,21 +506,20 @@ class ItemNoteList {
 
           <div class="task-list-item-texts">
 
-            <!-- CATEGORY avec highlight -->
+            <!-- CATEGORY -->
             <span class="task-list-item-category">
               [ ${this.highlight.includes("category")
                 ? this.highlightText(this.category, query)
                 : this.category} ]
             </span>
 
-            <!-- TITLE avec highlight -->
+            <!-- TITLE -->
             <div class="task-list-item-title">
               ${this.highlight.includes("title")
                 ? this.highlightText(this.title, query)
                 : this.title}
             </div>
 
-            <!-- badge contextuel -->
             ${matchInfo}
 
           </div>
@@ -529,10 +543,8 @@ class ItemNoteList {
     `;
   }
 
-
-
-
   update(data) {
+
     // 🔄 update title
     if (data.title !== undefined) {
       this.title = data.title;
@@ -543,16 +555,23 @@ class ItemNoteList {
       this.category = data.category;
     }
 
+    // 🔄 update priorité (🆕 important)
+    if (data.priority !== undefined) {
+      this.priority = data.priority;
+    }
+
     // 🔄 update progression
     if (data.percentValue !== undefined) {
       this.percentValue = data.percentValue;
     }
 
-    // 🎨 re-render visuel
+    // 🎨 re-render complet (image incluse automatiquement)
     this.render();
   }
-}
 
+
+
+}
 
 // *    *   *   *   *   *   Actualisation de la liste * *   *   *   *   *   *   *   
 

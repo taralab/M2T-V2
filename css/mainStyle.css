@@ -418,7 +418,7 @@
   width: 48px;
   height: 48px;
   border-radius: 10px;
-  background: #e5e7eb; /* gris placeholder */
+  background:none;
   flex-shrink: 0;
 }
 
