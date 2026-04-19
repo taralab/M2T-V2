@@ -663,7 +663,7 @@ class ItemStepNote {
 
       <input type="checkbox" class="task-editor-step-checkbox"/>
 
-      <div class="task-editor-step-text" contenteditable="true"></div>
+      <input class="task-editor-step-text" type="text" placeholder="Nouvelle étape" />
 
       <button class="task-editor-step-date">${formatDateFR(this.date)}</button>
 
@@ -685,7 +685,7 @@ class ItemStepNote {
     };
 
     // 🧠 Injection SAFE du texte (évite HTML injection)
-    this.refs.text.textContent = this.text;
+    this.refs.text.value = this.text;
 
     // 🔄 Sync checkbox
     this.refs.checkbox.checked = this.checked;
@@ -725,10 +725,9 @@ class ItemStepNote {
       debouncedUpdateStepAlert(this.key, this.alert);
     });
 
-    // ✏️ TEXTE (contenteditable)
+    // ✏️ TEXTE (input)
     this.refs.text.addEventListener("input", () => {
-      const newText = this.refs.text.textContent;
-      // 🧠 debounce state
+      const newText = this.refs.text.value; 
       debouncedUpdateStepText(this.key, newText);
     });
 
@@ -1366,7 +1365,7 @@ function onAddStep() {
     text: "",
     checked: false,
     date: "",
-    isAlertEnabled: false
+    alert: false
   };
 
   // 🧠 3. Ajout au state
@@ -1379,13 +1378,14 @@ function onAddStep() {
     newStep.checked,
     newStep.text,
     newStep.date,
-    newStep.isAlertEnabled
+    newStep.alert
   );
 
   // 🎯 5. Focus automatique
   setTimeout(() => {
     stepInstance.refs.text.focus();
   }, 0);
+
 }
 
 

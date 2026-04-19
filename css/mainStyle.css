@@ -287,11 +287,17 @@
   padding-right: 8px;
 }
 
+
+
 .task-editor-step-text {
+  border: none;
   outline: none;
+  background: transparent;
+  width: 100%;
+  font: inherit;
+  color: inherit;
   min-height: 24px;
   font-size: 15px;
-  color: #1f2937;
 }
 
 .text-checked{
