@@ -330,6 +330,23 @@ const itemTaskInstance = new Map();
 
 
 
+// État global de l’UI (source de vérité)
+let uiState = {
+  sortType: "status",     // tri actuel
+  searchQuery: "",         // texte de recherche actuel
+  currentEditId: null // 🔥 ID de la note en cours d'édition
+};
+
+
+const debounceEditTaskvalue = 300; //Delai avant traitement des modifications de la tache
+
+// Les alias
+const defaultAliasStatus = {
+  status1: "A faire",
+  status2: "En cours",
+  status3: "En attente"
+};
+
 //  -------------------------- Référencement--------------------------------
 
 
@@ -389,21 +406,29 @@ function onAddEventListenerForMainItems() {
   //Supprimer
 
   //priority
+  const changePriority = (event) => onTaskPriorityChange(event);
+  selectTaskEditorPriorityRef.addEventListener("change",changePriority);
+  onAddEventListenerInRegistry("taskItemEditor",selectTaskEditorPriorityRef,"change",changePriority);
 
   //status
+  const changeTaskStatus = (event) => onTaskStatusChange(event);
+  selectTaskEditorStatusRef.addEventListener("change",changeTaskStatus);
+  onAddEventListenerInRegistry("taskItemEditor",selectTaskEditorStatusRef,"change",changeTaskStatus);
 
   //Category
-  const inputCategory = (event) => onCategoryInput(event);
-  inputTaskEditorCategoryRef.addEventListener("input",inputCategory);
-  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorCategoryRef,"input",inputCategory);
+  const inputTaskCategory = (event) => onTaskCategoryInput(event);
+  inputTaskEditorCategoryRef.addEventListener("input",inputTaskCategory);
+  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorCategoryRef,"input",inputTaskCategory);
 
   //title
-  const inputTitle = (event) => onTitleInput(event);
-  inputTaskEditorTitleRef.addEventListener("input",inputTitle);
-  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorTitleRef,"input",inputTitle);
+  const inputTaskTitle = (event) => onTaskTitleInput(event);
+  inputTaskEditorTitleRef.addEventListener("input",inputTaskTitle);
+  onAddEventListenerInRegistry("taskItemEditor",inputTaskEditorTitleRef,"input",inputTaskTitle);
 
   //detail
-
+  const inputTaskDetail = (event) => onTaskDetailInput(event);
+  textareaTaskEditorDetailRef.addEventListener("input",inputTaskDetail);
+  onAddEventListenerInRegistry("taskItemEditor",textareaTaskEditorDetailRef,"input",inputTaskDetail);
 
   //step
 
@@ -590,7 +615,17 @@ class ItemNoteList {
 
 }
 
+
+
+
+
+
 // *    *   *   *   *   *   Actualisation de la liste * *   *   *   *   *   *   *   
+
+
+
+
+
 
 // Quand l’utilisateur change le type de tri
 function onChangeSortType() {
@@ -620,6 +655,8 @@ function refreshUI() {
     searchResult
   );
 }
+
+
 
 // Affichage complet de la liste (tri + groupage + UI)
 function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
@@ -677,7 +714,7 @@ function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
     // 🏷️ label groupe
     const label = document.createElement("div");
     label.classList.add("label");
-    label.textContent = `${groupValue.toUpperCase()} (${ids.length})`;
+    label.textContent = `${defaultAliasStatus[groupValue].toUpperCase()} (${ids.length})`;
     parentRef.appendChild(label);
 
     // 📄 items
@@ -709,6 +746,8 @@ function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
 
   });
 }
+
+
 
 // Calcule le % de tâches terminées
 function computeTaskProgress(stepArray) {
@@ -819,17 +858,9 @@ function groupSortedIds(allUserNoteList, sortedIds, sortType) {
 
 
 
-// RECHERCHE
+// *  * * * *  RECHERCHE  * * * * * * 
 
 
-
-
-// État global de l’UI (source de vérité)
-let uiState = {
-  sortType: "status",     // tri actuel
-  searchQuery: "",         // texte de recherche actuel
-  currentEditId: null // 🔥 ID de la note en cours d'édition
-};
 
 
 
@@ -919,6 +950,8 @@ function searchNotes(query) {
 
 
 
+
+
 function openTaskEditor(noteId) {
 
   // 🔥 on stocke l'ID actif
@@ -941,6 +974,8 @@ function onSetTaskEditor(data) {
   inputTaskEditorCategoryRef.value = data.category;
   inputTaskEditorTitleRef.value = data.title;
   textareaTaskEditorDetailRef.value = data.detail;
+  selectTaskEditorPriorityRef.value = data.priority;
+  selectTaskEditorStatusRef.value = data.status;
 }
 
 
@@ -954,18 +989,21 @@ function onSetTaskEditor(data) {
 function syncListItem(id) {
 
   // 🔍 récupérer instance UI
-  const item = itemTaskInstance.get(id);
+  const itemInstance = itemTaskInstance.get(id);
 
   // si pas affiché → rien à faire
-  if (!item) return;
+  if (!itemInstance) return;
 
   // 📦 source de vérité
   const data = allUserNoteList[id];
 
+  console.log(data);
+
   // 🔄 mise à jour ciblée de l'UI
-  item.update({
+  itemInstance.update({
     title: data.title,
     category: data.category,
+    priority: data.priority,
     percentValue: computeTaskProgress(data.stepArray)
   });
 }
@@ -975,11 +1013,11 @@ function syncListItem(id) {
 
 
 //modification categorie
-function onCategoryInput(e) {
-  debouncedUpdateCategory(e.target.value);
+function onTaskCategoryInput(e) {
+  debouncedUpdateTaskCategory(e.target.value);
 }
 // debounce global pour la categorie
-const debouncedUpdateCategory = debounce((newCategory) => {
+const debouncedUpdateTaskCategory = debounce((newCategory) => {
 
   const id = uiState.currentEditId;
   if (!id) return;
@@ -990,17 +1028,17 @@ const debouncedUpdateCategory = debounce((newCategory) => {
   // 🔄 sync UI
   syncListItem(id);
 
-}, 300);
+}, debounceEditTaskvalue);
 
 
 
 // Modification du titre
-function onTitleInput(e) {
-  debouncedUpdateTitle(e.target.value);
+function onTaskTitleInput(e) {
+  debouncedUpdateTaskTitle(e.target.value);
 }
 
 // debounce global pour le titre
-const debouncedUpdateTitle = debounce((newTitle) => {
+const debouncedUpdateTaskTitle = debounce((newTitle) => {
 
   const id = uiState.currentEditId;
   if (!id) return;
@@ -1011,7 +1049,88 @@ const debouncedUpdateTitle = debounce((newTitle) => {
   // 🔄 sync UI
   syncListItem(id);
 
-}, 300);
+}, debounceEditTaskvalue);
+
+
+
+
+// Modification des détails
+function onTaskDetailInput(e) {
+  debouncedUpdateTaskDetail(e.target.value);
+}
+
+// debounce global pour le titre
+const debouncedUpdateTaskDetail = debounce((newDetail) => {
+
+  const id = uiState.currentEditId;
+  if (!id) return;
+
+  // 🧠 update state
+  allUserNoteList[id].detail = newDetail;
+
+}, debounceEditTaskvalue);
+
+
+
+
+
+// Modification de la priorité
+function onTaskPriorityChange(e) {
+  debouncedUpdateTaskPriority(e.target.value);
+}
+// debounce global pour la priorité
+const debouncedUpdateTaskPriority = debounce((newPriority) => {
+
+  const id = uiState.currentEditId;
+  if (!id) return;
+
+  // 🧠 update state
+  allUserNoteList[id].priority = newPriority;
+
+
+  //si le trie actuel est sur priority, 
+  if (uiState.sortType === "priority") {
+    //on reactualise toute la liste
+    refreshUI();
+    console.log("Reactualisation");
+  }else{
+    //Sinon 🔄 sync UI
+    syncListItem(id);
+    console.log("mise a jour instance");
+  }
+
+}, debounceEditTaskvalue);
+
+
+// Modification de la priorité
+function onTaskStatusChange(e) {
+  debouncedUpdateTaskStatus(e.target.value);
+}
+// debounce global pour la priorité
+const debouncedUpdateTaskStatus = debounce((newStatus) => {
+
+  const id = uiState.currentEditId;
+  if (!id) return;
+
+  // 🧠 update state
+  allUserNoteList[id].status = newStatus;
+
+
+  //si le trie actuel est sur status, 
+  if (uiState.sortType === "status") {
+    //on reactualise toute la liste
+    refreshUI();
+    console.log("Reactualisation");
+  }else{
+    //Sinon 🔄 sync UI
+    syncListItem(id);
+    console.log("mise a jour instance");
+  }
+
+}, debounceEditTaskvalue);
+
+
+
 
 
 // exemple : toggle checkbox step
