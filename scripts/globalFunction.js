@@ -64,15 +64,26 @@ function debounce(fn, delay = 300) {
 
 
 
+// Formatage date
 
-
+const EMPTY_DATE_LABEL = "📅 Non définie";
 
 function formatDateFR(dateStr) {
+
+  if (!dateStr) return EMPTY_DATE_LABEL;
+
   const date = new Date(dateStr);
+
+  if (isNaN(date.getTime())) return EMPTY_DATE_LABEL;
 
   return new Intl.DateTimeFormat('fr-FR', {
     day: '2-digit',
     month: 'short',
     year: 'numeric'
   }).format(date);
+}
+
+
+function generateStepId() {
+  return "step_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
 }

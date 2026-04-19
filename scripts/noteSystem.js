@@ -431,6 +431,9 @@ function onAddEventListenerForMainItems() {
   onAddEventListenerInRegistry("taskItemEditor",textareaTaskEditorDetailRef,"input",inputTaskDetail);
 
   //step
+  const addStep = () => onAddStep();
+  btnTaskEditorAddStepRef.addEventListener("click",addStep);
+  onAddEventListenerInRegistry("taskItemEditor",btnTaskEditorAddStepRef,"click",addStep);
 
   //Date start
 
@@ -729,7 +732,7 @@ class ItemStepNote {
       debouncedUpdateStepText(this.key, newText);
     });
 
-    // 🗑️ DELETE (optionnel, prêt)
+    // 🗑️ DELETE
     this.refs.deleteBtn.addEventListener("click", () => {
 
       const noteId = uiState.currentEditId;
@@ -1329,6 +1332,65 @@ const debouncedUpdateStepText = debounce((stepId, text) => {
   step.text = text;
 
 }, 300);
+
+
+
+
+
+
+
+/**
+ * Ajoute une nouvelle étape
+ */
+function onAddStep() {
+  console.log("contact ADD STEP");
+
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
+
+  const steps = allUserNoteList[noteId].stepArray;
+
+  // ❌ 1. Vérifier si une étape vide existe
+  const hasEmptyStep = steps.some(step =>
+    !step.text || step.text.trim() === ""
+  );
+
+  if (hasEmptyStep) {
+    alert("Une étape est vide. Merci de la compléter avant d'en ajouter une nouvelle.");
+    return;
+  }
+
+  // ✔ 2. Création nouvelle step
+  const newStep = {
+    id: generateStepId(),
+    text: "",
+    checked: false,
+    date: "",
+    isAlertEnabled: false
+  };
+
+  // 🧠 3. Ajout au state
+  steps.push(newStep);
+
+  // 🎨 4. Ajout au DOM
+  const stepInstance = new ItemStepNote(
+    newStep.id,
+    divTaskEditorStepParentRef,
+    newStep.checked,
+    newStep.text,
+    newStep.date,
+    newStep.isAlertEnabled
+  );
+
+  // 🎯 5. Focus automatique
+  setTimeout(() => {
+    stepInstance.refs.text.focus();
+  }, 0);
+}
+
+
+
+
 
 
 
