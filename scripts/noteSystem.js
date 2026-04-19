@@ -1131,6 +1131,10 @@ function onSetTaskEditor(data) {
       stepData.alert
     );
   });
+
+  //Initialisation drag N drop
+  // ⚠️ IMPORTANT : après DOM ready
+  initStepSortable();
 }
 
 
@@ -1393,34 +1397,61 @@ function onAddStep() {
 
 
 
+// STEP DRAG N DROP
 
-// exemple : toggle checkbox step
-function onStepToggle(noteId) {
 
-  debounce(() => {
 
-    // 🧠 update state
-    const task = allUserNoteList[noteId];
 
-    task.percentValue = computeTaskProgress(task.stepArray);
+function initStepSortable() {
 
-    // 🔄 sync UI uniquement
-    syncListItem(noteId);
+  const container = divTaskEditorStepParentRef;
 
-  }, 200)();
+  new Sortable(container, {
+
+    animation: 150,
+    handle: ".task-editor-step-drag", // ✔ drag uniquement sur poignée
+
+    ghostClass: "drag-ghost",
+    chosenClass: "drag-chosen",
+
+    onEnd: function () {
+
+      syncStepOrderFromDOM();
+    }
+  });
 }
 
 
-// si le changement impacte le groupement → refresh global
-function handleSortChange() {
+/**
+ * Reconstruit stepArray selon l’ordre DOM
+ */
+function syncStepOrderFromDOM() {
 
-  uiState.sortType =
-    document.getElementById("taskSortSelect").value;
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
 
-  // 🚨 ici on rebuild tout
-  refreshUI();
+  const note = allUserNoteList[noteId];
+
+  const newOrder = [];
+
+  // 🔁 on lit l'ordre DOM
+  const stepElements = divTaskEditorStepParentRef.querySelectorAll(".task-editor-step-row");
+
+  stepElements.forEach(el => {
+
+    const id = el.dataset.id;
+
+    const step = note.stepArray.find(s => s.id === id);
+
+    if (step) newOrder.push(step);
+  });
+
+  // 🧠 update state
+  note.stepArray = newOrder;
+
+  // 📊 recalcul progress
+  syncListItem(noteId);
 }
-
 
 
 
