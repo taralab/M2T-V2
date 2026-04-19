@@ -616,6 +616,146 @@ class ItemNoteList {
 }
 
 
+class ItemStepNote {
+
+  /**
+   * Représente une étape dans l'éditeur
+   */
+  constructor(key, parentRef, checked, text, date, alert) {
+
+    // 🔑 ID unique de l'étape
+    this.key = key;
+
+    // 📦 Parent DOM
+    this.parentRef = parentRef;
+
+    // 🧠 State local (miroir UI)
+    this.checked = checked;
+    this.text = text;
+    this.date = date;
+    this.alert = alert;
+
+    // 🧱 Container principal
+    this.container = document.createElement("div");
+    this.container.classList.add("task-editor-step-row");
+
+    // 🔥 utile pour debug / futur (drag, etc.)
+    this.container.dataset.id = this.key;
+
+    // 🎨 render initial
+    this.render();
+
+    // 📌 insertion DOM
+    this.parentRef.appendChild(this.container);
+  }
+
+  /**
+   * Render initial du DOM
+   * ⚠️ appelé UNE SEULE FOIS (pas de re-render complet ensuite)
+   */
+  render() {
+
+    this.container.innerHTML = `
+      <button class="task-editor-step-drag">⋮⋮</button>
+
+      <input type="checkbox" class="task-editor-step-checkbox"/>
+
+      <div class="task-editor-step-text" contenteditable="true"></div>
+
+      <button class="task-editor-step-date">${formatDateFR(this.date)}</button>
+
+      <button class="task-editor-step-alert">
+        <img src="${this.getNotifyIcon()}" alt="Alerte">
+      </button>
+
+      <button class="task-editor-step-delete">
+        <img src="./images/IconeSupprimer.webp" alt="Supprimer">
+      </button>
+    `;
+
+    // 📌 Références DOM (important pour éviter querySelector multiple)
+    this.refs = {
+      checkbox: this.container.querySelector(".task-editor-step-checkbox"),
+      text: this.container.querySelector(".task-editor-step-text"),
+      alertBtn: this.container.querySelector(".task-editor-step-alert"),
+      deleteBtn: this.container.querySelector(".task-editor-step-delete")
+    };
+
+    // 🧠 Injection SAFE du texte (évite HTML injection)
+    this.refs.text.textContent = this.text;
+
+    // 🔄 Sync checkbox
+    this.refs.checkbox.checked = this.checked;
+
+    // 🎨 Style checked initial
+    if (this.checked) {
+      this.refs.text.classList.add("text-checked");
+    }
+
+    // 🎧 Bind des événements
+    this.bindEvents();
+  }
+
+  /**
+   * Attache tous les listeners
+   */
+  bindEvents() {
+
+    // ✅ CHECKBOX
+    this.refs.checkbox.addEventListener("change", () => {
+
+      const isChecked = this.refs.checkbox.checked;
+
+      // 🎨 UI immédiate (optimistic UI)
+      this.refs.text.classList.toggle("text-checked", isChecked);
+
+      // 🧠 debounce state update
+      debouncedUpdateStepChecked(this.key, isChecked);
+    });
+
+    // 🔔 BOUTON ALERTE
+    this.refs.alertBtn.addEventListener("click", () => {
+      this.alert = !this.alert;
+      // 🎨 update UI immédiat
+      this.refs.alertBtn.querySelector("img").src = this.getNotifyIcon();
+      // 🧠 debounce state
+      debouncedUpdateStepAlert(this.key, this.alert);
+    });
+
+    // ✏️ TEXTE (contenteditable)
+    this.refs.text.addEventListener("input", () => {
+      const newText = this.refs.text.textContent;
+      // 🧠 debounce state
+      debouncedUpdateStepText(this.key, newText);
+    });
+
+    // 🗑️ DELETE (optionnel, prêt)
+    this.refs.deleteBtn.addEventListener("click", () => {
+
+      const noteId = uiState.currentEditId;
+      if (!noteId) return;
+
+      // 🧠 suppression dans le state
+      allUserNoteList[noteId].stepArray =
+        allUserNoteList[noteId].stepArray.filter(s => s.id !== this.key);
+
+      // 🧹 suppression DOM
+      this.container.remove();
+
+      // 🔄 update progress liste
+      syncListItem(noteId);
+    });
+  }
+
+  /**
+   * Retourne l'icône d'alerte
+   */
+  getNotifyIcon() {
+    return this.alert
+      ? "./images/IconeNotifyEnabled.webp"
+      : "./images/IconeNotifyDisabled.webp";
+  }
+}
 
 
 
@@ -976,6 +1116,19 @@ function onSetTaskEditor(data) {
   textareaTaskEditorDetailRef.value = data.detail;
   selectTaskEditorPriorityRef.value = data.priority;
   selectTaskEditorStatusRef.value = data.status;
+
+  //les étapes
+  //Vide le parent
+  divTaskEditorStepParentRef.innerHTML = "";
+  //remplit avec les nouveaux éléments
+  data.stepArray.forEach(stepData=>{
+    new ItemStepNote(
+      stepData.id,divTaskEditorStepParentRef,
+      stepData.checked,
+      stepData.text,stepData.date,
+      stepData.alert
+    );
+  });
 }
 
 
@@ -1130,6 +1283,52 @@ const debouncedUpdateTaskStatus = debounce((newStatus) => {
 }, debounceEditTaskvalue);
 
 
+
+// CHECKBOX
+const debouncedUpdateStepChecked = debounce((stepId, checked) => {
+
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
+
+  const step = allUserNoteList[noteId].stepArray.find(s => s.id === stepId);
+  if (!step) return;
+
+  step.checked = checked;
+
+  // 🔄 update progress dans la liste
+  syncListItem(noteId);
+
+}, 200);
+
+
+// ALERT
+const debouncedUpdateStepAlert = debounce((stepId, isEnabled) => {
+
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
+
+  const step = allUserNoteList[noteId].stepArray.find(s => s.id === stepId);
+  if (!step) return;
+
+  step.alert = isEnabled;
+
+  console.log(allUserNoteList[noteId]);
+
+}, 200);
+
+
+// TEXT
+const debouncedUpdateStepText = debounce((stepId, text) => {
+
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
+
+  const step = allUserNoteList[noteId].stepArray.find(s => s.id === stepId);
+  if (!step) return;
+
+  step.text = text;
+
+}, 300);
 
 
 

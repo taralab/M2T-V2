@@ -60,3 +60,19 @@ function debounce(fn, delay = 300) {
     timeout = setTimeout(() => fn(...args), delay);
   };
 }
+
+
+
+
+
+
+
+function formatDateFR(dateStr) {
+  const date = new Date(dateStr);
+
+  return new Intl.DateTimeFormat('fr-FR', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  }).format(date);
+}
