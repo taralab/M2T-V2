@@ -347,6 +347,9 @@ const defaultAliasStatus = {
   status3: "En attente"
 };
 
+
+let currentTaskEditor = null;
+
 //  -------------------------- Référencement--------------------------------
 
 
@@ -436,8 +439,17 @@ function onAddEventListenerForMainItems() {
   onAddEventListenerInRegistry("taskItemEditor",btnTaskEditorAddStepRef,"click",addStep);
 
   //Date start
+  btnTaskEditorDateStartRef.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openCalendar("dateStart", btnTaskEditorDateStartRef);
+  });
 
   //date end
+  btnTaskEditorDateEndRef.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openCalendar("dateEnd", btnTaskEditorDateEndRef);
+  });
+
 
 }
 
@@ -1096,14 +1108,10 @@ function searchNotes(query) {
 
 function openTaskEditor(noteId) {
 
-  // 🔥 on stocke l'ID actif
   uiState.currentEditId = noteId;
 
   const data = allUserNoteList[noteId];
 
-  console.log(data);
-
-  // ici tu remplis ton éditeur avec les données
   onSetTaskEditor(data);
 }
 
@@ -1113,6 +1121,7 @@ function openTaskEditor(noteId) {
 
 // Set les éléments dans l'editeur
 function onSetTaskEditor(data) {
+
   inputTaskEditorCategoryRef.value = data.category;
   inputTaskEditorTitleRef.value = data.title;
   textareaTaskEditorDetailRef.value = data.detail;

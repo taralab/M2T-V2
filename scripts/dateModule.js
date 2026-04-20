@@ -1,14 +1,29 @@
 
+function openCalendar(type, element) {
+
+  const noteId = uiState.currentEditId;
+  if (!noteId) return;
+
+  CalendarModule.open(
+    {
+      noteId,
+      type
+    },
+    element
+  );
+}
+
+
 // =========================
 // CALENDAR MODULE
 // =========================
-const CalendarModule = (() => {
+function createCalendarModule() {
 
   // =========================
   // STATE INTERNE
   // =========================
-  let activeContext = null;   // { noteId, type, stepId }
-  let activeElement = null;   // élément DOM cliqué
+  let activeContext = null;
+  let activeElement = null;
   let currentDate = new Date();
 
   // =========================
@@ -21,36 +36,7 @@ const CalendarModule = (() => {
   const nextBtn = calendar.querySelector(".next");
 
   // =========================
-  // OUVERTURE
-  // =========================
-  function open(context, element) {
-    activeContext = context;
-    activeElement = element;
-
-    const isoDate = getDateFromContext();
-
-    // on convertit ISO → Date uniquement ici
-    currentDate = isoDate
-      ? new Date(isoDate + "T00:00:00")
-      : new Date();
-
-    positionCalendar(element);
-    render();
-
-    calendar.classList.remove("hidden");
-  }
-
-  // =========================
-  // FERMETURE
-  // =========================
-  function close() {
-    calendar.classList.add("hidden");
-    activeContext = null;
-    activeElement = null;
-  }
-
-  // =========================
-  // LECTURE DATA (ISO)
+  // HELPERS
   // =========================
   function getDateFromContext() {
     if (!activeContext) return null;
@@ -70,11 +56,8 @@ const CalendarModule = (() => {
     return null;
   }
 
-  // =========================
-  // ECRITURE DATA (ISO)
-  // =========================
   function setDateToContext(dateObj) {
-    if (!activeContext) return;
+     if (!activeContext) return;
 
     const { noteId, type, stepId } = activeContext;
     const note = allUserNoteList[noteId];
@@ -86,24 +69,32 @@ const CalendarModule = (() => {
     if (type === "dateEnd") note.dateEnd = iso;
 
     if (type === "step") {
-      const step = note.stepArray.find(s => s.id === stepId);
-      if (step) step.date = iso;
+        const step = note.stepArray.find(s => s.id === stepId);
+        if (step) step.date = iso;
+    }
+  }
+
+    function refreshTaskEditorUI() {
+
+        const task = allUserNoteList[uiState.currentEditId];
+        if (!task) return;
+
+        btnTaskEditorDateStartRef.textContent =
+            formatDateFR(task.dateStart);
+
+        btnTaskEditorDateEndRef.textContent =
+            formatDateFR(task.dateEnd);
     }
 
-    updateUI(iso);
-  }
+    function positionCalendar(element) {
+        const rect = element.getBoundingClientRect();
+
+        calendar.style.left = rect.left + "px";
+        calendar.style.top = rect.bottom + 8 + "px";
+    }
 
   // =========================
-  // UPDATE DOM
-  // =========================
-  function updateUI(isoDate) {
-    if (!activeElement) return;
-
-    activeElement.textContent = formatDateFR(isoDate);
-  }
-
-  // =========================
-  // RENDER CALENDRIER
+  // RENDER
   // =========================
   function render() {
     grid.innerHTML = "";
@@ -119,21 +110,17 @@ const CalendarModule = (() => {
       ? new Date(selectedISO + "T00:00:00")
       : null;
 
-    // label mois
     monthLabel.textContent = currentDate.toLocaleDateString("fr-FR", {
       month: "long",
       year: "numeric"
     });
 
-    // offset lundi
     const offset = (firstDay + 6) % 7;
 
-    // cases vides
     for (let i = 0; i < offset; i++) {
       grid.appendChild(document.createElement("div"));
     }
 
-    // jours
     for (let day = 1; day <= daysInMonth; day++) {
       const d = new Date(year, month, day);
 
@@ -141,23 +128,52 @@ const CalendarModule = (() => {
       div.classList.add("day");
       div.textContent = day;
 
-      // highlight sélection
       if (selectedDate && d.toDateString() === selectedDate.toDateString()) {
         div.classList.add("selected");
       }
 
-      div.addEventListener("click", (e) => {
+    div.addEventListener("click", (e) => {
         e.stopPropagation();
+
         setDateToContext(d);
+
+        refreshTaskEditorUI(); // 🔥 IMPORTANT
         close();
-      });
+    });
 
       grid.appendChild(div);
     }
   }
 
   // =========================
-  // NAVIGATION MOIS
+  // OPEN / CLOSE
+  // =========================
+  function open(context, element) {
+    activeContext = context;
+    activeElement = element;
+
+    const isoDate = getDateFromContext();
+
+    currentDate = isoDate
+      ? new Date(isoDate + "T00:00:00")
+      : new Date();
+
+    positionCalendar(element);
+    render();
+
+    calendar.classList.remove("hidden");
+  }
+
+  function close() {
+    calendar.classList.add("hidden");
+    activeContext = null;
+    activeElement = null;
+
+    refreshTaskEditorUI(); // 🔥 update visuel ici
+  }
+
+  // =========================
+  // EVENTS
   // =========================
   prevBtn.onclick = (e) => {
     e.stopPropagation();
@@ -171,29 +187,12 @@ const CalendarModule = (() => {
     render();
   };
 
-  // =========================
-  // POSITION POPUP
-  // =========================
-  function positionCalendar(element) {
-    const rect = element.getBoundingClientRect();
-
-    calendar.style.left = rect.left + "px";
-    calendar.style.top = rect.bottom + 8 + "px";
-  }
-
-  // =========================
-  // CLICK OUTSIDE
-  // =========================
   document.addEventListener("click", (e) => {
-    if (
-      !calendar.contains(e.target) &&
-      e.target !== activeElement
-    ) {
+    if (!calendar.contains(e.target) && e.target !== activeElement) {
       close();
     }
   });
 
-  // empêche fermeture interne
   calendar.addEventListener("click", (e) => {
     e.stopPropagation();
   });
@@ -202,10 +201,9 @@ const CalendarModule = (() => {
   // API PUBLIQUE
   // =========================
   return {
-    open
+    open,
+    close
   };
+}
 
-})();
-
-
-
+const CalendarModule = createCalendarModule();

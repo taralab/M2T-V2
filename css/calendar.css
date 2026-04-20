@@ -1,0 +1,43 @@
+.date-display {
+  padding: 6px 10px;
+  border-radius: 8px;
+  background: #f5f7fb;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.calendar {
+  position: absolute;
+  width: 240px;
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0,0,0,0.08);
+  padding: 12px;
+  z-index: 100;
+}
+
+.hidden {
+  display: none;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 6px;
+}
+
+.day {
+  text-align: center;
+  padding: 6px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.day:hover {
+  background: #eef2ff;
+}
+
+.day.selected {
+  background: #4f46e5;
+  color: white;
+}
