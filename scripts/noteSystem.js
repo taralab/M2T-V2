@@ -1132,6 +1132,10 @@ function onSetTaskEditor(data) {
     );
   });
 
+  //Les dates de début et fin
+  btnTaskEditorDateStartRef.textContent = formatDateFR(data.dateStart);
+  btnTaskEditorDateEndRef.textContent = formatDateFR(data.dateEnd);
+
   //Initialisation drag N drop
   // ⚠️ IMPORTANT : après DOM ready
   initStepSortable();
