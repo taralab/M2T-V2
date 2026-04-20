@@ -138,6 +138,7 @@ function createCalendarModule() {
         setDateToContext(d);
 
         refreshTaskEditorUI(); // 🔥 IMPORTANT
+        refreshStepsUI(); // 🔥 IMPORTANT
         close();
     });
 
@@ -204,6 +205,19 @@ function createCalendarModule() {
     open,
     close
   };
+}
+
+
+function refreshStepsUI() {
+  const note = allUserNoteList[uiState.currentEditId];
+  if (!note) return;
+
+  note.stepArray.forEach(step => {
+    const el = document.querySelector(`[data-id="${step.id}"] .task-editor-step-date`);
+    if (el) {
+      el.textContent = formatDateFR(step.date);
+    }
+  });
 }
 
 const CalendarModule = createCalendarModule();

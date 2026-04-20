@@ -670,6 +670,8 @@ class ItemStepNote {
    */
   render() {
 
+
+
     this.container.innerHTML = `
       <button class="task-editor-step-drag">⋮⋮</button>
 
@@ -693,7 +695,8 @@ class ItemStepNote {
       checkbox: this.container.querySelector(".task-editor-step-checkbox"),
       text: this.container.querySelector(".task-editor-step-text"),
       alertBtn: this.container.querySelector(".task-editor-step-alert"),
-      deleteBtn: this.container.querySelector(".task-editor-step-delete")
+      deleteBtn: this.container.querySelector(".task-editor-step-delete"),
+      dateBtn: this.container.querySelector(".task-editor-step-date")
     };
 
     // 🧠 Injection SAFE du texte (évite HTML injection)
@@ -758,6 +761,25 @@ class ItemStepNote {
 
       // 🔄 update progress liste
       syncListItem(noteId);
+    });
+
+
+    this.refs.dateBtn = this.container.querySelector(".task-editor-step-date");
+
+    this.refs.dateBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+
+      const noteId = uiState.currentEditId;
+      if (!noteId) return;
+
+      CalendarModule.open(
+        {
+          noteId,
+          type: "step",
+          stepId: this.key   // 🔥 CRUCIAL
+        },
+        this.refs.dateBtn
+      );
     });
   }
 
