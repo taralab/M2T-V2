@@ -70,18 +70,36 @@ const EMPTY_DATE_LABEL = "📅 Non définie";
 
 function formatDateFR(dateStr) {
 
-  if (!dateStr) return EMPTY_DATE_LABEL;
+    if (!dateStr) return EMPTY_DATE_LABEL;
 
-  const date = new Date(dateStr);
+    const date = new Date(dateStr);
+    if (isNaN(date.getTime())) return EMPTY_DATE_LABEL;
 
-  if (isNaN(date.getTime())) return EMPTY_DATE_LABEL;
+    const today = new Date();
 
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric'
-  }).format(date);
+    // comparaison correcte
+    if (date.toDateString() === today.toDateString()) {
+        return "Aujourd’hui";
+    }
+
+    return new Intl.DateTimeFormat("fr-FR", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+    }).format(date);
 }
+
+// =========================
+// UTILS
+// =========================
+function formatDateISO(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 
 
 function generateStepId() {
