@@ -3,6 +3,7 @@
 let dbName = `M2T_db`,
     taskStoreName = "Task";
 
+devMode = false;
 
 
 // -----------------------------------  pouch DB -------------------------------------
@@ -46,3 +47,22 @@ window.addEventListener("visibilitychange", () => {
     }
   }
 });
+
+
+
+
+
+// Procésus de lancement de l'application
+async function initApp() {
+
+    await onLoadTaskFromDB();
+}
+
+// Appel de la fonction après l'initialisation
+initApp().then(() => firstActualisation());
+
+
+async function firstActualisation() {
+    eventUpdateList("status");
+    onAddEventListenerForMainItems();
+};
