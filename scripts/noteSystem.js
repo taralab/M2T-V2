@@ -4,7 +4,7 @@ let allUserNoteList = {
     title: "Analyse budget Q1",
     dateCreated: "2026-04-10",
     dateLastModification: "2026-04-12",
-    dateStart: "2026-04-15",
+    dateStart: "",
     dateEnd: "2026-04-20",
     status: "status1",
     stepArray: [
@@ -309,18 +309,17 @@ let allUserNoteList = {
 
 
 
-// let noteToInsert = {
-//     category : "",
-//     title : "",
-//     dateCreated : "format stamp ?",
-//     dateLastModification : "format stamp ?",
-//     dateStart : "format stamp ?",
-//     dateEnd :  "format stamp ?",
-//     status : "",
-//     stepArray : {},
-//     detail : "",
-//     priority : "",
-// };
+let defaultTaskCanvas = {
+    category: "Nouvelle categorie",
+    title: "Nouvelle tache",
+    dateCreated: "",
+    dateStart: "",
+    dateEnd: "",
+    status: "status1",
+    stepArray: [],
+    detail: "",
+    priority: "LOW"
+};
 
 
 
@@ -350,6 +349,54 @@ const defaultAliasStatus = {
 
 let currentTaskEditor = null;
 
+
+
+
+
+
+
+
+// ------------------------------------------ DATA BASE -------------------------
+
+
+
+
+
+
+// Insertion nouvelle activité (ID auto avec préfixe)
+async function onInsertNewTaskInDB(newTaskToInsert) {
+    try {
+        const newTask = {
+            type: taskStoreName,
+            ...newTaskToInsert,
+            _id: `${taskStoreName}_${crypto.randomUUID()}` // génération UUID côté JS
+        };
+
+        // Enregistrement dans la DB
+        const response = await db.put(newTask);
+
+        // Mise à jour de l'objet avec _rev retourné
+        newTask._rev = response.rev;
+        console.log("[DATABASE] [TASK] Tache insérée :", newTask);
+
+        return newTask;
+
+    } catch (err) {
+        console.error("[DATABASE] [TASK] Erreur lors de l'insertion de la tache :", err);
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
 //  -------------------------- Référencement--------------------------------
 
 
@@ -358,7 +405,8 @@ let currentTaskEditor = null;
 
 let taskSortSelectRef = document.getElementById("taskSortSelect"),
   inputTaskSearchRef = document.getElementById("inputTaskSearch"),
-  divItemNoteListParentRef = document.getElementById("divItemNoteListParent");
+  divItemNoteListParentRef = document.getElementById("divItemNoteListParent"),
+  btnAddNewTaskRef = document.getElementById("btnAddNewTask");
 
 // Editeur de note
 let  btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
@@ -385,6 +433,12 @@ let  btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
 
 
 function onAddEventListenerForMainItems() {
+
+  //Nouvelle note
+  const addNewTask = () => onClickAddNewTask();
+  btnAddNewTaskRef.addEventListener("click",addNewTask);
+  onAddEventListenerInRegistry("persistantItems",btnAddNewTaskRef,"click",addNewTask);
+
   // Les tries et recherches
   const changeSortType = () => onChangeSortType();
   taskSortSelectRef.addEventListener("change",changeSortType)
@@ -1488,6 +1542,51 @@ function syncStepOrderFromDOM() {
   syncListItem(noteId);
 }
 
+
+
+
+
+
+
+
+// --------------------------- NOUVELLE NOTE ----------------------------
+
+
+
+
+async function onClickAddNewTask() {
+  
+  //récupère la date du jour
+  let dateToday = new Date();
+
+  //Insère la date de création
+  defaultTaskCanvas.dateCreated = formatDateISO(dateToday);
+
+  //création de la nouvelle tache en base et recupère l'id généré
+  let newTaskAdded = await onInsertNewTaskInDB( defaultTaskCanvas);
+
+  //Insertion dans l'objet principal
+  allUserNoteList[newTaskAdded._id] = newTaskAdded;
+
+  //Actualise la page
+  refreshUI();
+
+  //Affiche la nouvelle note créé
+  openTaskEditor(newTaskAdded._id);
+
+  //Focus sur le titre
+  taskEditorFocusTitle();
+
+
+}
+
+// Focus sur le titre
+function taskEditorFocusTitle() {
+  requestAnimationFrame(() => {
+    inputTaskEditorTitleRef.focus();
+    inputTaskEditorTitleRef.select();
+  });
+}
 
 
 
