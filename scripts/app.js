@@ -21,3 +21,28 @@ db.info().then(info => {
     intialDbCountInfo = info.doc_count;
     }
 );
+
+
+
+
+
+
+
+
+// ==============================
+// 🛑 FLUSH AVANT SORTIE
+// ==============================
+
+// Quand l'utilisateur change d'onglet / minimise / ferme
+window.addEventListener("visibilitychange", () => {
+
+  if (document.visibilityState === "hidden") {
+
+    console.log("[DB] ⚠️ flush before exit");
+
+    // Force exécution immédiate du debounce
+    if (debouncedSaveAllTasks.flush) {
+      debouncedSaveAllTasks.flush();
+    }
+  }
+});

@@ -1276,6 +1276,9 @@ const debouncedUpdateTaskCategory = debounce((newCategory) => {
   // 🔄 sync UI
   syncListItem(id);
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(id);
+
 }, debounceEditTaskvalue);
 
 
@@ -1297,6 +1300,9 @@ const debouncedUpdateTaskTitle = debounce((newTitle) => {
   // 🔄 sync UI
   syncListItem(id);
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(id);
+
 }, debounceEditTaskvalue);
 
 
@@ -1315,6 +1321,10 @@ const debouncedUpdateTaskDetail = debounce((newDetail) => {
 
   // 🧠 update state
   allUserNoteList[id].detail = newDetail;
+
+
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(id);
 
 }, debounceEditTaskvalue);
 
@@ -1347,6 +1357,9 @@ const debouncedUpdateTaskPriority = debounce((newPriority) => {
     console.log("mise a jour instance");
   }
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(id);
+
 }, debounceEditTaskvalue);
 
 
@@ -1375,6 +1388,9 @@ const debouncedUpdateTaskStatus = debounce((newStatus) => {
     console.log("mise a jour instance");
   }
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(id);
+
 }, debounceEditTaskvalue);
 
 
@@ -1393,6 +1409,9 @@ const debouncedUpdateStepChecked = debounce((stepId, checked) => {
   // 🔄 update progress dans la liste
   syncListItem(noteId);
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(noteId);
+
 }, 200);
 
 
@@ -1409,6 +1428,9 @@ const debouncedUpdateStepAlert = debounce((stepId, isEnabled) => {
 
   console.log(allUserNoteList[noteId]);
 
+  // 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(noteId);
+
 }, 200);
 
 
@@ -1423,7 +1445,10 @@ const debouncedUpdateStepText = debounce((stepId, text) => {
 
   step.text = text;
 
-}, 300);
+// 💾 3. Marquer pour sauvegarde DB
+  markTaskDirty(noteId);
+
+}, debounceEditTaskvalue);
 
 
 
@@ -1463,6 +1488,8 @@ function onAddStep() {
 
   // 🧠 3. Ajout au state
   steps.push(newStep);
+  // 💾 marquer comme modifié
+  markTaskDirty(noteId);
 
   // 🎨 4. Ajout au DOM
   const stepInstance = new ItemStepNote(
@@ -1540,6 +1567,9 @@ function syncStepOrderFromDOM() {
 
   // 📊 recalcul progress
   syncListItem(noteId);
+
+  // 💾 autosave
+  markTaskDirty(noteId);
 }
 
 
@@ -1587,6 +1617,107 @@ function taskEditorFocusTitle() {
     inputTaskEditorTitleRef.select();
   });
 }
+
+
+
+
+
+
+// ------------------------------------------------ SYSTEM AUTO SAVE DEBOUNCE ---------------------------------------
+
+
+
+// ==============================
+// 🧠 AUTOSAVE ENGINE - DATABASE
+// ==============================
+
+// Set contenant les IDs des tâches modifiées (dirty)
+// 👉 évite les doublons automatiquement
+const dirtyTasks = new Set();
+
+// Mémoire du dernier état sauvegardé (option optimisation)
+const lastSavedState = {};
+
+// Fonction utilitaire : vérifie si une tâche a réellement changé
+function hasTaskChanged(id, task) {
+
+  const prev = lastSavedState[id];
+  const current = JSON.stringify(task);
+
+  // Si identique → inutile de sauvegarder
+  if (prev === current) {
+    return false;
+  }
+
+  // Sinon on met à jour la mémoire
+  lastSavedState[id] = current;
+  return true;
+}
+
+
+// ==============================
+// 💾 DEBOUNCE GLOBAL DB
+// ==============================
+
+// Cette fonction sera appelée après X ms sans nouvelle modif
+const debouncedSaveAllTasks = debounce(async () => {
+
+  console.log("[DB] 🚀 Début batch save");
+
+  // On parcourt toutes les tâches modifiées
+  for (const id of dirtyTasks) {
+
+    const task = allUserNoteList[id];
+
+    // sécurité
+    if (!task) continue;
+
+    // 🔍 skip si aucune modification réelle
+    if (!hasTaskChanged(id, task)) {
+      console.log("[DB] ⏭️ skip (no change)", id);
+      continue;
+    }
+
+    try {
+      // 💾 sauvegarde dans PouchDB
+      const response = await db.put(task);
+
+      // 🔄 IMPORTANT : mise à jour du _rev
+      task._rev = response.rev;
+
+      console.log("[DB] ✅ saved", id);
+
+    } catch (err) {
+      console.error("[DB] ❌ error", id, err);
+    }
+  }
+
+  // 🧹 reset après batch
+  dirtyTasks.clear();
+
+  console.log("[DB] 🧹 Fin batch");
+
+}, 1200); // ⏱️ debounce DB (1.2s recommandé)
+
+
+
+
+// ==============================
+// 🏷️ MARQUER UNE TÂCHE "DIRTY"
+// ==============================
+
+function markTaskDirty(id) {
+
+  if (!id) return;
+
+  // Ajoute la tâche dans la liste des modifs
+  dirtyTasks.add(id);
+
+  // Lance le debounce DB
+  debouncedSaveAllTasks();
+}
+
+
 
 
 
