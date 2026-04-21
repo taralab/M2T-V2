@@ -140,7 +140,7 @@
   border-radius: 20px;
   padding: 24px;
   box-shadow: 0 8px 30px rgba(31, 41, 55, 0.04);
-  display: flex;
+  display: none;
   flex-direction: column;
   gap: 24px;
 }

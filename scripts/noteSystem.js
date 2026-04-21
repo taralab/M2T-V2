@@ -182,7 +182,8 @@ let taskSortSelectRef = document.getElementById("taskSortSelect"),
   btnAddNewTaskRef = document.getElementById("btnAddNewTask");
 
 // Editeur de note
-let  btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
+let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer"),
+  btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
   btnTaskEditorPrintRef = document.getElementById("btnTaskEditorPrint"),
   btnTaskEditorDelete = document.getElementById("btnTaskEditorDelete"),
   selectTaskEditorPriorityRef = document.getElementById("selectTaskEditorPriority"),
@@ -970,6 +971,9 @@ function searchNotes(query) {
 
 
 function openTaskEditor(noteId) {
+
+  //Affiche la div
+  divTaskEditorContainerRef.style.display = "flex";
 
   uiState.currentEditId = noteId;
 
