@@ -39,7 +39,11 @@
 
     /* BOUTON NOUVELLE TACHE ET TEMPLATE*/
     .btn{
-      width:42px;height:42px;border:none;border-radius:12px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.04)
+      width:42px;height:42px;
+      border:none;border-radius:12px;
+      background:#fff;
+      box-shadow:0 2px 8px rgba(0,0,0,.04);
+      cursor: pointer;
     }
     .btn.primary{
       background:var(--primary);color:#fff
