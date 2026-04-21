@@ -74,6 +74,11 @@ const defaultAliasStatus = {
   status3: "En attente"
 };
 
+const defaultAliasPriority = {
+  LOW:"Basse",
+  MEDIUM:"Moyenne",
+  HIGH:"Haute"
+}
 
 let currentTaskEditor = null;
 
@@ -732,7 +737,8 @@ function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
     // 🏷️ label groupe
     const label = document.createElement("div");
     label.classList.add("label");
-    label.textContent = `${defaultAliasStatus[groupValue].toUpperCase()} (${ids.length})`;
+    const labelText = getGroupLabel(sortType, groupValue) ?? groupValue;
+    label.textContent = `${labelText.toUpperCase()} (${ids.length})`;
     parentRef.appendChild(label);
 
     // 📄 items
@@ -765,6 +771,19 @@ function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
   });
 }
 
+//Pour la convertion
+function getGroupLabel(sortType, groupValue) {
+  switch (sortType) {
+    case "status":
+      return defaultAliasStatus[groupValue];
+
+    case "priority":
+      return defaultAliasPriority[groupValue];
+
+    default:
+      return groupValue;
+  }
+}
 
 
 // Calcule le % de tâches terminées
