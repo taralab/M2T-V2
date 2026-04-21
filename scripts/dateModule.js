@@ -72,6 +72,9 @@ function createCalendarModule() {
         const step = note.stepArray.find(s => s.id === stepId);
         if (step) step.date = iso;
     }
+
+    // 💾 3. Marquer pour sauvegarde DB
+    markTaskDirty(noteId);
   }
 
     function refreshTaskEditorUI() {

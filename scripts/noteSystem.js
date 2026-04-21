@@ -815,6 +815,10 @@ class ItemStepNote {
 
       // 🔄 update progress liste
       syncListItem(noteId);
+
+      // 💾 3. Marquer pour sauvegarde DB
+      markTaskDirty(noteId);
+      
     });
 
 
