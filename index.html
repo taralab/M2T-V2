@@ -9,6 +9,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="./css/calendar.css">
   <link rel="stylesheet" href="./css/mainStyle.css">
+  <link rel="stylesheet" href="./css/popupConfirm.css">
 </head>
 <body>
   <div class="app">
@@ -210,9 +211,36 @@
   </div>
 
 
+  <!-- POPUP CONFIRMATION -->
+  <div id="divGlobalPopupConfirmation" class="popup-confirm-overlay">
+    <div class="popup-confirm-modal">
+
+      <div id="divPopupConfirmIcon" class="popup-confirm-icon">
+        <!-- Injection -->
+      </div>
+
+      <h2 id="popupConfirmMainText">
+        <!-- Injection -->
+      </h2>
+
+      <p id="popupConfirmSecondaryText" class="popup-confirm-description">
+        <!-- Injection -->
+      </p>
+
+      <div class="popup-confirm-actions">
+        <button id="btnPopupConfirmCancel" class="popup-confirm-btn cancel">Annuler</button>
+        <button id="btnPopupConfirmValid" class="popup-confirm-btn danger">
+          <!-- Injection -->
+        </button>
+      </div>
+
+    </div>
+  </div>
+
   <script src="./scripts/pouchdb.min.js"></script>
   <script src="./scripts/Sortable.min.js"></script>
   <script src="./scripts/globalFunction.js"></script>
+  <script src="./scripts/popupConfirm.js"></script>
   <script src="./scripts/noteSystem.js"></script>
   <script src="./scripts/dateModule.js"></script>
   <script src="./scripts/app.js"></script>

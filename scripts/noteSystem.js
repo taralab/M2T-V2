@@ -190,7 +190,7 @@ let taskSortSelectRef = document.getElementById("taskSortSelect"),
 let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer"),
   btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
   btnTaskEditorPrintRef = document.getElementById("btnTaskEditorPrint"),
-  btnTaskEditorDelete = document.getElementById("btnTaskEditorDelete"),
+  btnTaskEditorDeleteRef = document.getElementById("btnTaskEditorDelete"),
   selectTaskEditorPriorityRef = document.getElementById("selectTaskEditorPriority"),
   selectTaskEditorStatusRef = document.getElementById("selectTaskEditorStatus"),
   inputTaskEditorCategoryRef = document.getElementById("inputTaskEditorCategory"),
@@ -240,6 +240,9 @@ function onAddEventListenerForMainItems() {
   //imprimer
 
   //Supprimer
+  const askDeleteTask = () => onClickDeleteTask();
+  btnTaskEditorDeleteRef.addEventListener("click",askDeleteTask);
+  onAddEventListenerInRegistry("taskItemEditor",btnTaskEditorDeleteRef,"click",askDeleteTask);
 
   //priority
   const changePriority = (event) => onTaskPriorityChange(event);
@@ -1534,10 +1537,20 @@ function markTaskDirty(id) {
 
 
 
+// ----------------------------------------- SUPPRESSION-----------------------------------------
 
 
 
 
 
+
+
+
+
+
+function onClickDeleteTask() {
+  //Affiche le popup de suppression
+  addEventForGlobalPopupConfirmation("cancelPopupFunction","confirmPopupFunction",confirmPopupContextData["delete"]);
+}
 
 

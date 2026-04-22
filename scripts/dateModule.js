@@ -128,7 +128,7 @@ function createCalendarModule() {
       const d = new Date(year, month, day);
 
       const div = document.createElement("div");
-      div.classList.add("day");
+      div.classList.add("calendar-day");
       div.textContent = day;
 
       if (selectedDate && d.toDateString() === selectedDate.toDateString()) {

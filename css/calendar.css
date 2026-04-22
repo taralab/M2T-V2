@@ -16,9 +16,7 @@
   z-index: 100;
 }
 
-.hidden {
-  display: none;
-}
+
 
 .calendar-grid {
   display: grid;
@@ -26,18 +24,18 @@
   gap: 6px;
 }
 
-.day {
+.calendar-day {
   text-align: center;
   padding: 6px;
   border-radius: 6px;
   cursor: pointer;
 }
 
-.day:hover {
+.calendar-day:hover {
   background: #eef2ff;
 }
 
-.day.selected {
+.calendar-day.selected {
   background: #4f46e5;
   color: white;
 }

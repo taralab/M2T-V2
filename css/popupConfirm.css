@@ -1,0 +1,113 @@
+/* Overlay (blur + fade moderne) */
+.popup-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+/* popup-confirm-modal */
+.popup-confirm-modal {
+  position: relative;
+  width: 420px;
+  background: #ffffff;
+  border-radius: 20px;
+  padding: 32px;
+  text-align: center;
+
+  box-shadow: 
+    0 20px 60px rgba(0, 0, 0, 0.15),
+    0 8px 20px rgba(0, 0, 0, 0.08);
+
+  animation: fadeIn 0.25s ease;
+}
+
+/* Animation smooth */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+
+/* Icon cercle */
+.popup-confirm-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background: rgba(239, 68, 68, 0.1);
+  font-size: 28px;
+}
+
+/* Title */
+.popup-confirm-modal h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 12px;
+}
+
+/* Description */
+.popup-confirm-description {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+
+
+/* Buttons */
+.popup-confirm-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.popup-confirm-btn {
+  flex: 1;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Cancel */
+.popup-confirm-btn.cancel {
+  background: #f3f4f6;
+  border: none;
+  color: #111827;
+}
+
+.popup-confirm-btn.cancel:hover {
+  background: #e5e7eb;
+}
+
+/* Danger */
+.popup-confirm-btn.danger {
+  background: #ef4444;
+  border: none;
+  color: white;
+}
+
+.popup-confirm-btn.danger:hover {
+  background: #dc2626;
+  transform: translateY(-1px);
+}
