@@ -172,7 +172,35 @@ async function onLoadTaskFromDB() {
 
 
 
+/**
+ * Supprime un document PouchDB à partir de son ID
+ * @param {PouchDB.Database} db - instance de la base
+ * @param {string} id - _id du document à supprimer
+ * @returns {Promise<boolean>} - true si supprimé, false sinon
+ */
+async function deleteById(id) {
+  if (!id) {
+    throw new Error("Paramètres invalides : id est requis");
+  }
 
+  try {
+    // Récupération du document (nécessaire pour avoir _rev)
+    const doc = await db.get(id);
+
+    // Suppression
+    await db.remove(doc);
+
+    return true;
+  } catch (err) {
+    if (err.status === 404) {
+      console.warn(`Document introuvable pour id: ${id}`);
+      return false;
+    }
+
+    console.error("Erreur lors de la suppression :", err);
+    throw err;
+  }
+}
 
 
 //  -------------------------- Référencement--------------------------------
@@ -1550,7 +1578,31 @@ function markTaskDirty(id) {
 
 function onClickDeleteTask() {
   //Affiche le popup de suppression
-  addEventForGlobalPopupConfirmation("cancelPopupFunction","confirmPopupFunction",confirmPopupContextData["delete"]);
+  addEventForGlobalPopupConfirmation(onConfirmDeleteTask,confirmPopupContextData["delete"]);
 }
+
+
+
+async function onConfirmDeleteTask() {
+
+  //récupère l'id de la tache à supprimer
+  const idToDelete = uiState.currentEditId;
+
+  //retire l'élément du state
+  delete allUserNoteList[idToDelete];
+  //supprime de la base
+  await deleteById(idToDelete);
+
+  uiState.currentEditId = null;
+
+  //ferme l'éditeur
+  divTaskEditorContainerRef.style.display = "none";
+
+  //refresh UI
+  refreshUI();
+  
+}
+
+
 
 

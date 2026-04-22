@@ -58,6 +58,7 @@ function addEventForGlobalPopupConfirmation(confirmPopupFunction,contextData) {
 
     btnGlobalPopupConfirmEventListener = (event) =>{
         confirmPopupFunction(event);
+        removeEventForGlobalPopupConfirmation();
     }
     
     confirmBtnTarget.addEventListener("click",btnGlobalPopupConfirmEventListener);
