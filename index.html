@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="./css/calendar.css">
   <link rel="stylesheet" href="./css/mainStyle.css">
   <link rel="stylesheet" href="./css/popupConfirm.css">
+  <link rel="stylesheet" href="./css/alert.css">
 </head>
 <body>
   <div class="app">
@@ -31,7 +32,10 @@
           </button>
           <button class="btn"><img src="./images/IconeNewFromTemplate.webp" alt="Modèle"></button>
         </div>
-        <div class="right-top"><button class="btn">🔔</button></div>
+        <div class="right-top">
+          <button class="btn" id="notif-bell">🔔</button>
+          <span id="notif-bell-badge" class="notif-bell-badge hidden">0</span>
+        </div>
       </div>
 
       <!-- =============================
@@ -237,12 +241,32 @@
     </div>
   </div>
 
+
+  <div id="notif-popup" class="notif-popup hidden">
+    <div class="notif-header">
+      Notifications <span id="notif-badge" class="badge">0</span>
+    </div>
+
+    <div class="notif-section">
+      <h4>Aujourd’hui</h4>
+      <div id="notif-today-tasks"></div>
+      <div id="notif-today-steps"></div>
+    </div>
+
+    <div class="notif-section">
+      <h4>En retard</h4>
+      <div id="notif-overdue-tasks"></div>
+      <div id="notif-overdue-steps"></div>
+    </div>
+</div>
+
   <script src="./scripts/pouchdb.min.js"></script>
   <script src="./scripts/Sortable.min.js"></script>
   <script src="./scripts/globalFunction.js"></script>
   <script src="./scripts/popupConfirm.js"></script>
   <script src="./scripts/noteSystem.js"></script>
   <script src="./scripts/dateModule.js"></script>
+  <script src="./scripts/alert.js"></script>
   <script src="./scripts/app.js"></script>
 
 </body>

@@ -65,4 +65,6 @@ initApp().then(() => firstActualisation());
 async function firstActualisation() {
     eventUpdateList("status");
     onAddEventListenerForMainItems();
+
+    refreshAlertList();
 };
