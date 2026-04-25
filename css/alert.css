@@ -40,8 +40,8 @@
 
 .notif-popup {
   position: absolute;
-  top: 60px;
-  right: 20px;
+  top: 70px;
+  right: 340px;
   width: 400px;
   max-height: 500px;
   overflow-y: auto;
