@@ -58,13 +58,15 @@ function getTaskAlert() {
 
       if (isToday(note.dateEnd)) {
         todayTasks.push({
-          title: note.title
+          title: note.title,
+          taskID:note._id
         });
       }
 
       if (isOverdue(note.dateEnd)) {
         overdueTasks.push({
-          title: note.title
+          title: note.title,
+          taskID:note._id
         });
       }
     }
@@ -90,7 +92,8 @@ function getTaskAlert() {
       if (isToday(step.date)) {
         todaySteps.push({
           title: step.text,
-          taskTitle: note.title
+          taskTitle: note.title,
+          taskID:note._id
         });
       }
 
@@ -98,7 +101,8 @@ function getTaskAlert() {
       if (isOverdue(step.date)) {
         overdueSteps.push({
           title: step.text,
-          taskTitle: note.title
+          taskTitle: note.title,
+          taskID:note._id
         });
       }
     });
@@ -122,7 +126,7 @@ function renderList(containerId, items, type, itemType) {
   }
 
   items.forEach(function(item) {
-
+    console.log(item);
     const div = document.createElement("div");
     div.className = "notif-item " + type + " " + itemType;
 
