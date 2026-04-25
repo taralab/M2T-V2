@@ -130,7 +130,7 @@ function renderList(containerId, items, type, itemType) {
     const div = document.createElement("div");
     div.className = "notif-item " + type + " " + itemType;
 
-    const label = itemType === "step"
+    const label = itemType === "step-alert"
       ? "<span class='notif-label'>Étape</span>"
       : "<span class='notif-label'>Tâche</span>";
 
@@ -156,8 +156,8 @@ function renderNotifications() {
   renderList("notif-today-tasks", todayTasks, "today", "task");
   renderList("notif-overdue-tasks", overdueTasks, "overdue", "task");
 
-  renderList("notif-today-steps", todaySteps, "today", "step");
-  renderList("notif-overdue-steps", overdueSteps, "overdue", "step");
+  renderList("notif-today-steps", todaySteps, "today", "step-alert");
+  renderList("notif-overdue-steps", overdueSteps, "overdue", "step-alert");
 
   const total =
     todayTasks.length +

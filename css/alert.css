@@ -95,7 +95,7 @@
 }
 
 /* Étape = sous élément */
-.notif-item.step {
+.notif-item.step-alert {
   padding-left: 16px;
   font-size: 13px;
   color: #555;
