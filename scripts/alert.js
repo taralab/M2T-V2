@@ -162,7 +162,7 @@ function renderNotifications() {
   document.getElementById("notif-badge").innerText = total;
 
   // badge sur la cloche
-  const bellBadge = document.getElementById("notif-bell-badge");
+  const bellBadge = document.getElementById("alertIconBadge");
 
   if (total > 0) {
     bellBadge.innerText = total > 9 ? "9+" : total;
@@ -176,11 +176,11 @@ function renderNotifications() {
  * 8. TOGGLE POPUP pour ouvrir ou fermer
  ************************************/
 
-const bell = document.getElementById("notif-bell");
-const popup = document.getElementById("notif-popup");
+const btnAlertIconRef = document.getElementById("btnAlertIcon");
+const divNotifyAlertRef = document.getElementById("divAlertPopup");
 
-bell.addEventListener("click", function() {
-  popup.classList.toggle("hidden");
+btnAlertIconRef.addEventListener("click", function() {
+  divNotifyAlertRef.classList.toggle("hidden");
 });
 
 
@@ -188,10 +188,11 @@ bell.addEventListener("click", function() {
  * 9. INIT
  ************************************/
 
-
+//actualisé au lancement, modification date end, étape,
+//lors de suppression et validation d'une tache
 
 function refreshAlertList() {
-
+  console.log("Actualisation des alertes");
 
   //Récupère les éléments dans les taches
   getTaskAlert();

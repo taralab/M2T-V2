@@ -33,8 +33,10 @@
           <button class="btn"><img src="./images/IconeNewFromTemplate.webp" alt="Modèle"></button>
         </div>
         <div class="right-top">
-          <button class="btn" id="notif-bell">🔔</button>
-          <span id="notif-bell-badge" class="notif-bell-badge hidden">0</span>
+          <div class="notity-bell-container">
+            <button class="btn" id="btnAlertIcon">🔔</button>
+            <span id="alertIconBadge" class="notif-bell-badge hidden">0</span>
+          </div>
         </div>
       </div>
 
@@ -242,7 +244,7 @@
   </div>
 
 
-  <div id="notif-popup" class="notif-popup hidden">
+  <div id="divAlertPopup" class="notif-popup hidden">
     <div class="notif-header">
       Notifications <span id="notif-badge" class="badge">0</span>
     </div>

@@ -1536,6 +1536,9 @@ const debouncedSaveAllTasks = debounce(async () => {
   // 🧹 reset après batch
   dirtyTasks.clear();
 
+  //actualisation des alertes
+  refreshAlertList();
+
   console.log("[DB] 🧹 Fin batch");
 
 }, 1200); // ⏱️ debounce DB (1.2s recommandé)
@@ -1600,6 +1603,7 @@ async function onConfirmDeleteTask() {
 
   //refresh UI
   refreshUI();
+  refreshAlertList();
   
 }
 
