@@ -549,6 +549,14 @@
   display: none;
 }
 
+
+
+.btn-close-X{
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
     @media (max-width:1200px){.grid{grid-template-columns:1fr 1fr}.side-deadlines{grid-column:1/-1}}
     @media (max-width:860px){.app{grid-template-columns:1fr}.sidebar{flex-direction:row;overflow:auto}.spacer{display:none}.grid{grid-template-columns:1fr}.footer-meta{grid-template-columns:1fr}}
   

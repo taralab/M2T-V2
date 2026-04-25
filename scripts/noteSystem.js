@@ -216,7 +216,8 @@ let taskSortSelectRef = document.getElementById("taskSortSelect"),
 
 //Alerte
 let  btnAlertIconRef = document.getElementById("btnAlertIcon"),
-    divNotifyAlertRef = document.getElementById("divAlertPopup");
+    divNotifyAlertRef = document.getElementById("divAlertPopup"),
+    btnClosePopupAlertRef = document.getElementById("btnClosePopupAlert");
 
 // Editeur de note
 let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer"),
@@ -266,10 +267,14 @@ function onAddEventListenerForMainItems() {
 
 
   //Alerte notification
-  const clickIconAlertNotify = () => onToggleNotifyAlert();
+  const clickIconAlertNotify = () => onDisplayNotifyAlert();
   btnAlertIconRef.addEventListener("click",clickIconAlertNotify);
   onAddEventListenerInRegistry("persistantItems",btnAlertIconRef,"click",clickIconAlertNotify);
 
+  //ferme popup alert notify
+  const closeNotifyAlert = () => onCloseNotifyAlert();
+  btnClosePopupAlertRef.addEventListener("click", closeNotifyAlert);
+  onAddEventListenerInRegistry("persistantItems",btnClosePopupAlertRef,"click", closeNotifyAlert);
 
 
   //----l'editeur de tache-----

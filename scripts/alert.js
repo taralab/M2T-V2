@@ -165,8 +165,6 @@ function renderNotifications() {
     todaySteps.length +
     overdueSteps.length;
 
-  // badge dans le popup
-  document.getElementById("notif-badge").innerText = total;
 
   // badge sur la cloche
   const bellBadge = document.getElementById("alertIconBadge");
@@ -207,6 +205,10 @@ function refreshAlertList() {
 
 
 //Clique sur notification alerte
-function onToggleNotifyAlert(params) {
-  divNotifyAlertRef.classList.toggle("hidden");
+function onDisplayNotifyAlert() {
+  divNotifyAlertRef.classList.remove("hidden");
+}
+
+function onCloseNotifyAlert() {
+  divNotifyAlertRef.classList.add("hidden");
 }
