@@ -214,6 +214,10 @@ let taskSortSelectRef = document.getElementById("taskSortSelect"),
   divItemNoteListParentRef = document.getElementById("divItemNoteListParent"),
   btnAddNewTaskRef = document.getElementById("btnAddNewTask");
 
+//Alerte
+let  btnAlertIconRef = document.getElementById("btnAlertIcon"),
+    divNotifyAlertRef = document.getElementById("divAlertPopup");
+
 // Editeur de note
 let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer"),
   btnTaskEditorValiderRef = document.getElementById("btnTaskEditorValider"),
@@ -228,6 +232,7 @@ let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer
   btnTaskEditorAddStepRef = document.getElementById("btnTaskEditorAddStep"),
   btnTaskEditorDateStartRef = document.getElementById("btnTaskEditorDateStart"),
   btnTaskEditorDateEndRef = document.getElementById("btnTaskEditorDateEnd");
+
 
 
 
@@ -260,7 +265,14 @@ function onAddEventListenerForMainItems() {
 
 
 
-  //l'editeur de tache
+  //Alerte notification
+  const clickIconAlertNotify = () => onToggleNotifyAlert();
+  btnAlertIconRef.addEventListener("click",clickIconAlertNotify);
+  onAddEventListenerInRegistry("persistantItems",btnAlertIconRef,"click",clickIconAlertNotify);
+
+
+
+  //----l'editeur de tache-----
 
   // Valider
 
@@ -1604,7 +1616,7 @@ async function onConfirmDeleteTask() {
   //refresh UI
   refreshUI();
   refreshAlertList();
-  
+
 }
 
 

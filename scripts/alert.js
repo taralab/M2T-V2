@@ -172,20 +172,11 @@ function renderNotifications() {
   }
 }
 
-/************************************
- * 8. TOGGLE POPUP pour ouvrir ou fermer
- ************************************/
 
-const btnAlertIconRef = document.getElementById("btnAlertIcon");
-const divNotifyAlertRef = document.getElementById("divAlertPopup");
-
-btnAlertIconRef.addEventListener("click", function() {
-  divNotifyAlertRef.classList.toggle("hidden");
-});
 
 
 /************************************
- * 9. INIT
+ * 9. ACTUALISATION
  ************************************/
 
 //actualisé au lancement, modification date end, étape,
@@ -202,3 +193,13 @@ function refreshAlertList() {
   renderNotifications();
 }
 
+
+/************************************
+ * DIVERS
+ ************************************/
+
+
+//Clique sur notification alerte
+function onToggleNotifyAlert(params) {
+  divNotifyAlertRef.classList.toggle("hidden");
+}
