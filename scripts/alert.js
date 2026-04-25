@@ -140,6 +140,9 @@ function renderList(containerId, items, type, itemType) {
       ${item.taskTitle ? `<br><small>${item.taskTitle}</small>` : ""}
     `;
 
+    //Lorsque clique sur la notification ouvre la tache en question
+    div.addEventListener("click", () => openTaskEditor(item.taskID));
+
     container.appendChild(div);
   });
 }
