@@ -36,7 +36,7 @@
 
 .notif-section h4 {
   font-size: 13px;
-  color: #888;
+  /* color: #888; */
   margin-bottom: 6px;
 }
 
@@ -50,15 +50,6 @@
 .notif-item:hover {
   background: #f5f6f8;
 }
-
-.overdue {
-  color: #d9363e;
-}
-
-.today {
-  color: #1677ff;
-}
-
 
 .notif-popup {
   position: absolute;

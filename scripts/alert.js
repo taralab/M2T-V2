@@ -115,20 +115,20 @@ function getTaskAlert() {
  * 6. RENDER
  ************************************/
 
-function renderList(containerId, items, type, itemType) {
+function renderList(containerId, items, itemType) {
   const container = document.getElementById(containerId);
 
   container.innerHTML = "";
 
   if (items.length === 0) {
-    container.innerHTML = "<small style='color:#999'>Aucun élément</small>";
+    container.innerHTML = "";
     return;
   }
 
   items.forEach(function(item) {
     console.log(item);
     const div = document.createElement("div");
-    div.className = "notif-item " + type + " " + itemType;
+    div.className = "notif-item " + " " + itemType;
 
     const label = itemType === "step-alert"
       ? "<span class='notif-label'>Étape</span>"
@@ -136,7 +136,7 @@ function renderList(containerId, items, type, itemType) {
 
     div.innerHTML = `
       ${label}
-      <strong>${item.title}</strong>
+      <span>${item.title}</span>
       ${item.taskTitle ? `<br><small>${item.taskTitle}</small>` : ""}
     `;
 
@@ -153,11 +153,11 @@ function renderList(containerId, items, type, itemType) {
 
 function renderNotifications() {
 
-  renderList("notif-today-tasks", todayTasks, "today", "task");
-  renderList("notif-overdue-tasks", overdueTasks, "overdue", "task");
+  renderList("notif-today-tasks", todayTasks, "task");
+  renderList("notif-overdue-tasks", overdueTasks, "task");
 
-  renderList("notif-today-steps", todaySteps, "today", "step-alert");
-  renderList("notif-overdue-steps", overdueSteps, "overdue", "step-alert");
+  renderList("notif-today-steps", todaySteps, "step-alert");
+  renderList("notif-overdue-steps", overdueSteps, "step-alert");
 
   const total =
     todayTasks.length +
