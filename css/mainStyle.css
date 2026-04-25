@@ -21,7 +21,8 @@
 
       /*Main area  */
     .main{
-      padding:22px
+      padding: 22px;
+      margin-right: 320px; /* largeur + marge */
     }
 
     /* TOP AREA */
@@ -51,9 +52,10 @@
     .btn img{
       width: 24px;
     }
-
-    .grid{
-      display:grid;grid-template-columns:1.15fr 1fr 280px;gap:20px
+    .grid {
+      display: grid;
+      grid-template-columns: 1.15fr 1fr;
+      gap: 20px;
     }
     .panel{
       background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 8px 30px rgba(31,41,55,.04)
@@ -557,9 +559,15 @@
   cursor: pointer;
 }
 
-    @media (max-width:1200px){.grid{grid-template-columns:1fr 1fr}.side-deadlines{grid-column:1/-1}}
-    @media (max-width:860px){.app{grid-template-columns:1fr}.sidebar{flex-direction:row;overflow:auto}.spacer{display:none}.grid{grid-template-columns:1fr}.footer-meta{grid-template-columns:1fr}}
-  
+.side-deadlines {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100vh;
 
+  border-radius: 0; /* optionnel pour un effet plein écran */
+  overflow-y: auto;
+}
 
 
