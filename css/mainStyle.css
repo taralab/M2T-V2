@@ -22,7 +22,7 @@
       /*Main area  */
     .main{
       padding: 22px;
-      margin-right: 320px; /* largeur + marge */
+      width: calc(100% - 300px);
     }
 
     /* TOP AREA */
@@ -53,9 +53,9 @@
       width: 24px;
     }
     .grid {
-      display: grid;
-      grid-template-columns: 1.15fr 1fr;
+      display: flex;
       gap: 20px;
+      height: calc(100vh - 200px); /* ajuste selon ton header */
     }
     .panel{
       background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;box-shadow:0 8px 30px rgba(31,41,55,.04)
@@ -149,6 +149,10 @@
   display: none;
   flex-direction: column;
   gap: 24px;
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
+  max-width: 1000px;
 }
 
 /* =============================
@@ -571,3 +575,14 @@
 }
 
 
+.task-list{
+  width: 550px;
+  height: 100%;
+  overflow-y: auto;
+}
+
+
+/* Pour débugger les trucs qui dépasse */
+/* * {
+  outline: 1px solid red;
+} */
