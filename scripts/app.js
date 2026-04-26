@@ -37,6 +37,7 @@ db.info().then(info => {
 // Quand l'utilisateur change d'onglet / minimise / ferme
 window.addEventListener("visibilitychange", () => {
 
+  //Quitte l'application
   if (document.visibilityState === "hidden") {
 
     console.log("[DB] ⚠️ flush before exit");
@@ -44,6 +45,21 @@ window.addEventListener("visibilitychange", () => {
     // Force exécution immédiate du debounce
     if (debouncedSaveAllTasks.flush) {
       debouncedSaveAllTasks.flush();
+    }
+  }
+
+  //Revient dans l'application
+  if (document.visibilityState === "visible") {
+    console.log("[APP] 👀 back in app");
+
+    const now = Date.now();
+
+    // si retour après une longue pause 6 heures
+    if (lastHiddenTime && now - lastHiddenTime > 21_600_000) {
+      console.log("[APP] 🔄 long inactivity detected → refresh UI");
+
+      updateMainDisplayDate();
+      refreshAlertList();
     }
   }
 });
@@ -67,4 +83,6 @@ async function firstActualisation() {
     onAddEventListenerForMainItems();
 
     refreshAlertList();
+
+    updateMainDisplayDate();
 };

@@ -1,4 +1,24 @@
 
+let mainDisplayDateRef = document.getElementById("mainDisplayDate");
+
+//Set la date du jour
+function updateMainDisplayDate() {
+    const formatted = new Intl.DateTimeFormat('fr-FR', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+    }).format(new Date());
+
+    const result = formatted.charAt(0).toUpperCase() + formatted.slice(1);
+
+    mainDisplayDateRef.textContent = result;
+}
+
+
+
+
+
 
 
 // Registre des listeners
@@ -105,3 +125,6 @@ function formatDateISO(date) {
 function generateStepId() {
   return "step_" + Date.now() + "_" + Math.floor(Math.random() * 1000);
 }
+
+
+
