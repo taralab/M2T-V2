@@ -126,18 +126,22 @@ function renderList(containerId, items, itemType) {
   }
 
   items.forEach(function(item) {
-    console.log(item);
+    if (devMode) {
+      console.log(item);
+    }
+
     const div = document.createElement("div");
     div.className = "notif-item " + " " + itemType;
+    div.className = "notif-item";
 
     const label = itemType === "step-alert"
-      ? "<span class='notif-label'>Étape</span>"
-      : "<span class='notif-label'>Tâche</span>";
+      ? "<span class='notif-label-step'>Étape</span>"
+      : "<span class='notif-label-task'>Tâche</span>";
 
     div.innerHTML = `
       ${label}
-      <span>${item.title}</span>
-      ${item.taskTitle ? `<br><small>${item.taskTitle}</small>` : ""}
+      <span class='alert-main-text' >${item.title}</span>
+      ${item.taskTitle ? `<br><span class='alert-secondary-text'>${item.taskTitle}</span>` : ""}
     `;
 
     //Lorsque clique sur la notification ouvre la tache en question
@@ -188,8 +192,9 @@ function renderNotifications() {
 //lors de suppression et validation d'une tache
 
 function refreshAlertList() {
-  console.log("Actualisation des alertes");
-
+  if (devMode) {
+    console.log("Actualisation des alertes");
+  }
   //Récupère les éléments dans les taches
   getTaskAlert();
 

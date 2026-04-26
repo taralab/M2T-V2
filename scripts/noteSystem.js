@@ -110,7 +110,9 @@ async function onInsertNewTaskInDB(newTaskToInsert) {
 
         // Mise à jour de l'objet avec _rev retourné
         newTask._rev = response.rev;
-        console.log("[DATABASE] [TASK] Tache insérée :", newTask);
+        if (devMode) {
+          console.log("[DATABASE] [TASK] Tache insérée :", newTask);
+        }
 
         return newTask;
 
@@ -157,7 +159,9 @@ async function onLoadTaskFromDB() {
             console.log("[DATABASE] [TASK] taches chargées :", taskStoreName);
 
             const firstKey = Object.keys(allUserNoteList)[0];
-            console.log(allUserNoteList[firstKey]);
+            if (devMode) {
+              console.log(allUserNoteList[firstKey]);
+            }
 
         }
 
@@ -513,10 +517,8 @@ class ItemNoteList {
   setActive(isActive) {
     if (isActive) {
       this.container.classList.add("task-list-item-active");
-      console.log("Activation de la nouvelle tache");
     } else {
       this.container.classList.remove("task-list-item-active");
-      console.log("Desactivation de l'ancienne tache");
     }
   }
 }
@@ -1107,7 +1109,9 @@ function onSetTaskEditor(data) {
 //Systeme de coloration de la tache en cours
 function syncTaskSelection(newTaskId) {
 
-  console.log(`Sync task selection → ${newTaskId}`);
+  if (devMode) {
+    console.log(`Sync task selection → ${newTaskId}`);
+  }
 
   const oldTaskId = uiState.currentEditId;
 
@@ -1177,8 +1181,9 @@ function syncListItem(id) {
   // 📦 source de vérité
   const data = allUserNoteList[id];
 
-  console.log(data);
-
+  if (devMode) {
+    console.log(data);
+  }
   // 🔄 mise à jour ciblée de l'UI
   itemInstance.update({
     title: data.title,
@@ -1283,11 +1288,15 @@ const debouncedUpdateTaskPriority = debounce((newPriority) => {
   if (uiState.sortType === "priority") {
     //on reactualise toute la liste
     refreshUI();
-    console.log("Reactualisation");
+    if (devMode) {
+      console.log("Reactualisation");
+    }
   }else{
     //Sinon 🔄 sync UI
     syncListItem(id);
-    console.log("mise a jour instance");
+    if (devMode) {
+      console.log("mise a jour instance");
+    }
   }
 
   // 💾 3. Marquer pour sauvegarde DB
@@ -1314,11 +1323,15 @@ const debouncedUpdateTaskStatus = debounce((newStatus) => {
   if (uiState.sortType === "status") {
     //on reactualise toute la liste
     refreshUI();
-    console.log("Reactualisation");
+    if (devMode) {
+      console.log("Reactualisation");
+    }
   }else{
     //Sinon 🔄 sync UI
     syncListItem(id);
-    console.log("mise a jour instance");
+    if (devMode) {
+      console.log("mise a jour instance");
+    }
   }
 
   // 💾 3. Marquer pour sauvegarde DB
@@ -1359,7 +1372,6 @@ const debouncedUpdateStepAlert = debounce((stepId, isEnabled) => {
 
   step.alert = isEnabled;
 
-  console.log(allUserNoteList[noteId]);
 
   // 💾 3. Marquer pour sauvegarde DB
   markTaskDirty(noteId);
@@ -1393,7 +1405,6 @@ const debouncedUpdateStepText = debounce((stepId, text) => {
  * Ajoute une nouvelle étape
  */
 function onAddStep() {
-  console.log("contact ADD STEP");
 
   const noteId = uiState.currentEditId;
   if (!noteId) return;
@@ -1595,7 +1606,9 @@ function hasTaskChanged(id, task) {
 // Cette fonction sera appelée après X ms sans nouvelle modif
 const debouncedSaveAllTasks = debounce(async () => {
 
-  console.log("[DB] 🚀 Début batch save");
+  if (devMode) {
+    console.log("[DB] 🚀 Début batch save");
+  }
 
   // On parcourt toutes les tâches modifiées
   for (const id of dirtyTasks) {
@@ -1607,7 +1620,9 @@ const debouncedSaveAllTasks = debounce(async () => {
 
     // 🔍 skip si aucune modification réelle
     if (!hasTaskChanged(id, task)) {
-      console.log("[DB] ⏭️ skip (no change)", id);
+      if (devMode) {
+        console.log("[DB] ⏭️ skip (no change)", id);
+      }
       continue;
     }
 
@@ -1617,8 +1632,9 @@ const debouncedSaveAllTasks = debounce(async () => {
 
       // 🔄 IMPORTANT : mise à jour du _rev
       task._rev = response.rev;
-
-      console.log("[DB] ✅ saved", id);
+      if (devMode) {
+        console.log("[DB] ✅ saved", id);
+      }
 
     } catch (err) {
       console.error("[DB] ❌ error", id, err);
@@ -1631,7 +1647,9 @@ const debouncedSaveAllTasks = debounce(async () => {
   //actualisation des alertes
   refreshAlertList();
 
-  console.log("[DB] 🧹 Fin batch");
+  if (devMode) {
+    console.log("[DB] 🧹 Fin batch");
+  }
 
 }, 1200); // ⏱️ debounce DB (1.2s recommandé)
 
