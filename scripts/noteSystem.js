@@ -509,6 +509,16 @@ class ItemNoteList {
     return map[this.priority] || map["LOW"];
   }
 
+
+  setActive(isActive) {
+    if (isActive) {
+      this.container.classList.add("task-list-item-active");
+      console.log("Activation de la nouvelle tache");
+    } else {
+      this.container.classList.remove("task-list-item-active");
+      console.log("Desactivation de l'ancienne tache");
+    }
+  }
 }
 
 
@@ -715,6 +725,9 @@ function refreshUI() {
     filteredIds,
     searchResult
   );
+
+  // 🧠 Réapplique la sélection après reconstruction du DOM
+  syncTaskSelection(uiState.currentEditId);
 }
 
 
@@ -1039,6 +1052,9 @@ function searchNotes(query) {
 
 function openTaskEditor(noteId) {
 
+  // 👇 gestion du highlight AVANT de changer l’état UI
+  syncTaskSelection(noteId);
+
   //Affiche la div
   divTaskEditorContainerRef.style.display = "flex";
 
@@ -1085,6 +1101,31 @@ function onSetTaskEditor(data) {
   //Initialisation drag N drop
   // ⚠️ IMPORTANT : après DOM ready
   initStepSortable();
+}
+
+
+//Systeme de coloration de la tache en cours
+function syncTaskSelection(newTaskId) {
+
+  console.log(`Sync task selection → ${newTaskId}`);
+
+  const oldTaskId = uiState.currentEditId;
+
+  // 🔥 CAS 1 : ancienne sélection différente → transition normale
+  if (oldTaskId && oldTaskId !== newTaskId) {
+    const oldItem = itemTaskInstance.get(oldTaskId);
+    oldItem?.setActive(false);
+  }
+
+  // 🔥 CAS 2 : nouvelle instance (toujours nécessaire, même si même ID)
+  const newItem = itemTaskInstance.get(newTaskId);
+
+  if (newItem) {
+    newItem.setActive(true);
+  }
+
+  // 🧠 MAJ état (toujours après DOM sync)
+  uiState.currentEditId = newTaskId;
 }
 
 

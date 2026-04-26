@@ -459,6 +459,7 @@
 
   cursor: pointer;
   transition: all 0.2s ease;
+  margin-bottom: 10px;
 }
 
 .task-list-item:hover {
@@ -614,6 +615,11 @@
   overflow-y: auto;
 }
 
+
+.task-list-item-active {
+  background-color: rgba(124, 140, 255, 0.08);
+  border-left: 3px solid #7c8cff;
+}
 
 /* Pour débugger les trucs qui dépasse */
 /* * {
