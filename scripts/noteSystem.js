@@ -1062,8 +1062,7 @@ function onSetTaskEditor(data) {
   selectTaskEditorPriorityRef.value = data.priority;
   selectTaskEditorStatusRef.value = data.status;
 
-  //les étapes
-  //Vide le parent
+  //Vide le parent des étapes
   divTaskEditorStepParentRef.innerHTML = "";
   //remplit avec les nouveaux éléments
   data.stepArray.forEach(stepData=>{
@@ -1075,6 +1074,10 @@ function onSetTaskEditor(data) {
     );
   });
 
+  //le backGround du selecteur
+  updatePrioritySelectBackground(data.priority);
+
+
   //Les dates de début et fin
   btnTaskEditorDateStartRef.textContent = formatDateFR(data.dateStart);
   btnTaskEditorDateEndRef.textContent = formatDateFR(data.dateEnd);
@@ -1085,8 +1088,38 @@ function onSetTaskEditor(data) {
 }
 
 
+//traitement couleur priority editeur
+function updatePrioritySelectBackground(newPriority) {
 
+  // Liste des classes possibles
+  const classes = [
+    "backGroundPriorityHigh",
+    "backGroundPriorityMedium",
+    "backGroundPriorityLow"
+  ];
 
+  // Nettoyage : on enlève toutes les classes de priorité
+  selectTaskEditorPriorityRef.classList.remove(...classes);
+
+  // Normalisation (sécurité)
+  const priority = newPriority?.toUpperCase();
+
+  // Application de la nouvelle classe
+  switch (priority) {
+    case "HIGH":
+      selectTaskEditorPriorityRef.classList.add("backGroundPriorityHigh");
+      break;
+    case "MEDIUM":
+      selectTaskEditorPriorityRef.classList.add("backGroundPriorityMedium");
+      break;
+    case "LOW":
+      selectTaskEditorPriorityRef.classList.add("backGroundPriorityLow");
+      break;
+    default:
+      // Optionnel : aucun style ou fallback
+      break;
+  }
+}
 
 
 
@@ -1193,6 +1226,7 @@ const debouncedUpdateTaskDetail = debounce((newDetail) => {
 // Modification de la priorité
 function onTaskPriorityChange(e) {
   debouncedUpdateTaskPriority(e.target.value);
+  updatePrioritySelectBackground(e.target.value);
 }
 // debounce global pour la priorité
 const debouncedUpdateTaskPriority = debounce((newPriority) => {

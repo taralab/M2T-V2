@@ -1,8 +1,26 @@
     :root {
-      --bg:#f5f6fb; --card:#fff; --line:#e8eaf4; --text:#182033; --muted:#7f879b;
-      --primary:#5865f2; --sidebar:#0f1947; --green:#42c46b; --purple-soft:#efe9ff;
+      --bg:#f5f6fb; --card:#fff; 
+      --line:#e8eaf4; --text:#182033; 
+      --muted:#7f879b;
+      --primary:#5865f2; --sidebar:#0f1947; 
+
       --radius:20px;
+
+      --green:#42c46b; 
+      --purple-soft:#efe9ff;
+      --green-soft:#e4f7ee;
+      --red-soft:    #fdeaea;
+      --yellow-soft: #fff8e1;
+      --blue-soft:   #e8f1fd;
+      --orange-soft: #fff1e6;
+      --pink-soft:   #fdeaf4;
+      --teal-soft:   #e6f7f5;
+      --gray-soft:   #f5f6f8;
     }
+
+
+
+
     *{box-sizing:border-box} body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
 
     .app{
@@ -74,7 +92,9 @@
       }
 
     .deadline{
-      background:var(--purple-soft);padding:16px;border-radius:14px;margin-top:14px;font-weight:600}.deadline.green{background:#e4f7ee}
+      background:var(--purple-soft);
+      padding:16px;border-radius:14px;
+      margin-top:14px;font-weight:600}.deadline.green{background:#e4f7ee}
 
 
 
@@ -225,6 +245,19 @@
   gap: 16px;
   flex-wrap: nowrap;
 }
+
+.backGroundPriorityHigh{
+  background-color: var(--red-soft);
+}
+
+.backGroundPriorityMedium{
+  background-color: var(--yellow-soft);
+}
+
+.backGroundPriorityLow{
+  background-color: var(--card);
+}
+
 /* =============================
    INPUTS PRINCIPAUX
 ============================= */
