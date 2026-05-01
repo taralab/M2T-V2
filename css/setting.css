@@ -398,3 +398,59 @@
 .setting-reset-wrapper{
   margin-top: 10px;
 }
+
+
+
+
+/* FEEDBACK WRAPPER */
+
+.setting-import-feedback{
+  margin-top: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* BASE MESSAGE */
+
+.setting-import-message{
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+/* SUCCESS */
+
+.setting-success{
+  background: #f3fbf6;
+  border-color: #bde5c8;
+  color: #1f7a3f;
+}
+
+/* ERROR */
+
+.setting-error{
+  background: #fff5f5;
+  border-color: #f3c2c2;
+  color: #b63a3a;
+}
+
+/* ICON */
+
+.setting-feedback-icon{
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+}
+
+/* TEXT */
+
+.setting-feedback-text{
+  margin: 0;
+}
+
+

@@ -3,7 +3,7 @@
 let dbName = `M2T_db`,
     taskStoreName = "Task";
 
-devMode = false;
+
 
 
 // -----------------------------------  pouch DB -------------------------------------

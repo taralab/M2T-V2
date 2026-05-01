@@ -224,7 +224,7 @@
 
             <div class="setting-card-header">
               <div class="setting-card-icon">
-                🏷
+                📝
               </div>
 
               <div>
@@ -375,7 +375,29 @@
 
               </label>
 
+
+              <!-- Resultat import  -->
+              <div id="settingImportFeedback" class="setting-import-feedback">
+
+                <div id="settingImportSuccess" class="setting-import-message setting-success hidden">
+                  <span class="setting-feedback-icon">✔</span>
+                  <p class="setting-feedback-text">
+                    Données importées avec succès.
+                  </p>
+                </div>
+
+                <div id="settingImportError" class="setting-import-message setting-error hidden">
+                  <span class="setting-feedback-icon">✖</span>
+                  <p class="setting-feedback-text">
+                    Erreur lors de l'import. Fichier invalide.
+                  </p>
+                </div>
+
+              </div>
+
             </div>
+
+
 
             <!-- EXPORT -->
             <div class="setting-section-block setting-inline-block">
@@ -413,15 +435,8 @@
                 </div>
 
                 <label class="setting-switch">
-
-                  <input
-                    type="checkbox"
-                    id="settingAutoSaveToggle"
-                    checked
-                  >
-
+                  <input type="checkbox" id="settingAutoSaveToggle">
                   <span class="setting-slider"></span>
-
                 </label>
 
               </div>
@@ -429,21 +444,16 @@
               <!-- FREQUENCY -->
               <div class="setting-frequency-wrapper">
 
-                <label
-                  for="settingAutoSaveFrequency"
-                  class="setting-frequency-label"
-                >
+                <label for="settingAutoSaveFrequency" class="setting-frequency-label">
                   Fréquence
                 </label>
 
-                <select
-                  id="settingAutoSaveFrequency"
-                  class="setting-select"
-                >
-                  <option>Tous les jours</option>
-                  <option>Tous les 3 jours</option>
-                  <option selected>Tous les 7 jours</option>
-                  <option>Tous les 30 jours</option>
+                <select id="settingAutoSaveFrequency" class="setting-select">
+                  <option value="1">Tous les jours</option>
+                  <option value="3">Tous les 3 jours</option>
+                  <option value="7">Tous les 7 jours</option>
+                  <option value="15">Tous les 15 jours</option>
+                  <option value="30">Tous les 30 jours</option>
                 </select>
 
               </div>
@@ -451,19 +461,13 @@
             </div>
 
             <!-- LAST SAVE -->
-            <div
-              id="settingLastSaveBox"
-              class="setting-last-save-box"
-            >
+            <div id="settingLastSaveBox" class="setting-last-save-box">
 
               <span class="setting-last-save-label">
-                Dernière sauvegarde automatique
+                Dernière sauvegarde
               </span>
 
-              <span
-                id="settingLastSaveDate"
-                class="setting-last-save-date"
-              >
+              <span id="settingLastSaveDate" class="setting-last-save-date">
                 8 avril 2026 à 10:42
               </span>
 
@@ -505,6 +509,43 @@
 
           </div>
 
+          <!-- DIVERS CARD -->
+          <div class="setting-card">
+            <div class="setting-card-header">
+              <div class="setting-card-icon">
+                ⋯
+              </div>
+
+              <div>
+                <h2 class="setting-card-title">Divers</h2>
+                <p class="setting-card-description">
+                  Options diverses non catégorisées.
+                </p>
+              </div>
+            </div>
+
+            <!-- DEV MODE -->
+            <div class="setting-section-block">
+              <div class="setting-toggle-row">
+
+                <div>
+                  <h3 class="setting-section-title">
+                    Mode développeur
+                  </h3>
+
+                  <p class="setting-section-description">
+                    Active les logs dans F12.
+                  </p>
+                </div>
+
+                <label class="setting-switch">
+                  <input type="checkbox" id="settingDevModeToggle">
+                  <span class="setting-slider"></span>
+                </label>
+
+              </div>
+            </div>   
+          </div>
         </section>
 
       </section>
@@ -571,6 +612,7 @@
 
   <script src="./scripts/pouchdb.min.js"></script>
   <script src="./scripts/Sortable.min.js"></script>
+  <script src="./scripts/setting.js"></script>
   <script src="./scripts/globalFunction.js"></script>
   <script src="./scripts/popupConfirm.js"></script>
   <script src="./scripts/noteSystem.js"></script>
