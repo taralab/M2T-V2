@@ -128,3 +128,80 @@ function generateStepId() {
 
 
 
+// GESTION DES CHANGEMENTS DE MENU
+let currentMenu = "MainPage";
+
+function onChangeMenu(menuTarget) {
+
+
+    console.log(`demande de changement de menu pour ${menuTarget}`);
+
+    //Aucune action si clique sur le menu en cours
+    if (currentMenu === menuTarget) {
+        
+        if (devMode) {
+            console.log("Aucune action c'est le même menu");
+        }
+        return;
+    }
+
+    //Traitement pour quitter l'ancien menu 
+    onLeaveMenu(currentMenu);
+
+
+    //Traitement pour le nouveau menu
+    switch (menuTarget) {
+        case "MainPage":
+            btnMenuMainPageRef.classList.add("active");
+            document.getElementById("sectionMainPage").classList.remove("hidden");
+            document.getElementById("divToolbarSearch").classList.remove("hidden");
+            document.getElementById("divMainPageTop").classList.remove("hidden");
+            break;
+
+        case "Setting":
+            btnMenuSettingRef.classList.add("active");
+            document.getElementById("sectionSettingPage").classList.remove("hidden");
+
+            break;
+
+        case "Timeline":
+
+            break;
+    
+        default:
+            console.error(`[ NAVIGATION ] Erreur : Aucune correspondance pour le nouveau menu : ${menuTarget}`);
+            break;
+    }
+
+
+    //Définit le menu choisi comme celui en cours
+    currentMenu = menuTarget;
+
+}
+
+//fonction pour quitter un menu
+function onLeaveMenu(menuTarget) {
+    
+    switch (menuTarget) {
+        case "MainPage":
+            // Retire le marqueur "active" sur le bouton
+            btnMenuMainPageRef.classList.remove("active");
+            document.getElementById("sectionMainPage").classList.add("hidden");
+            document.getElementById("divToolbarSearch").classList.add("hidden");
+            document.getElementById("divMainPageTop").classList.add("hidden");
+            break;
+
+        case "Setting":
+            btnMenuSettingRef.classList.remove("active");
+            document.getElementById("sectionSettingPage").classList.add("hidden");
+            break;
+
+        case "Timeline":
+
+            break;
+    
+        default:
+            console.error(`[ NAVIGATION ] Erreur : Aucune correspondance pour le nouveau menu : ${menuTarget}`);
+            break;
+    }
+}

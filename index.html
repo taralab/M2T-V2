@@ -5,23 +5,21 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MindToTask V2</title>
   <link rel="stylesheet" href="./css/calendar.css">
-  <link rel="stylesheet" href="./css/mainStyle.css">
   <link rel="stylesheet" href="./css/popupConfirm.css">
   <link rel="stylesheet" href="./css/alert.css">
+  <link rel="stylesheet" href="./css/setting.css">
+  <link rel="stylesheet" href="./css/mainStyle.css">
 </head>
 <body>
   <div class="app">
     <aside class="sidebar">
-      <div class="icon active">⌂</div>
-      <div class="icon">☰</div>
-      <div class="icon">▣</div>
-      <div class="icon">☷</div>
-      <div class="icon">⚙</div>
+      <div class="icon active" id="btnMenuMainPage">⌂</div>
+      <div class="icon" id="btnMenuSetting">⚙</div>
       <div class="spacer"></div>
       <div class="icon">?</div>
     </aside>
     <main class="main">
-      <div class="top">
+      <div class="top" id="divMainPageTop">
         <div class="left-top">
           <h1 id="mainDisplayDate">Mercredi 8 avril 2026</h1>
           <button class="btn primary" id="btnAddNewTask">
@@ -40,7 +38,7 @@
       <!-- =============================
           BARRE FILTRE + RECHERCHE
       ============================= -->
-      <div class="task-toolbar-search">
+      <div class="task-toolbar-search" id="divToolbarSearch">
         
         <!-- Bloc filtre -->
         <div class="task-toolbar-filter-group">
@@ -63,7 +61,10 @@
           id="inputTaskSearch"
         />
       </div>
-      <section class="grid">
+      <!-- =============================
+          MAIN PAGE
+      ============================= -->
+      <section class="grid" id="sectionMainPage">
         <div class="panel task-list" id="divItemNoteListParent">
           <!-- Injection de la liste des taches -->
         </div>
@@ -199,6 +200,313 @@
           <div class="deadline">Bilan T1 — 15 avr.</div>
           <div class="deadline green">Campagne de printemps — 30 avr.</div>
         </div>
+      </section>
+      <!-- =============================
+          SETTING
+      ============================= -->
+      <section id="sectionSettingPage" class="setting-page hidden">
+
+        <!-- HEADER -->
+        <div class="setting-header">
+          <div>
+            <h1 id="settingTitle" class="setting-title">Paramètres</h1>
+            <p id="settingSubtitle" class="setting-subtitle">
+              Personnalisez les statuts et la gestion des sauvegardes de votre application.
+            </p>
+          </div>
+        </div>
+
+        <!-- GRID -->
+        <section class="grid">
+
+          <!-- STATUS CARD -->
+          <div id="settingStatusCard" class="setting-card">
+
+            <div class="setting-card-header">
+              <div class="setting-card-icon">
+                🏷
+              </div>
+
+              <div>
+                <h2 class="setting-card-title">Statuts personnalisés</h2>
+                <p class="setting-card-description">
+                  Définissez les différents statuts utilisés dans votre workflow.
+                </p>
+              </div>
+            </div>
+
+            <div id="settingStatusList" class="setting-status-list">
+
+              <div class="setting-status-item">
+                <span class="setting-status-number">01</span>
+
+                <div class="setting-status-input-wrapper">
+                  <!-- <div class="setting-status-color setting-color-blue"></div> -->
+
+                  <input
+                    type="text"
+                    id="settingStatusInput1"
+                    class="setting-status-input"
+                    placeholder="À faire"
+                  >
+                </div>
+              </div>
+
+              <div class="setting-status-item">
+                <span class="setting-status-number">02</span>
+
+                <div class="setting-status-input-wrapper">
+                  <!-- <div class="setting-status-color setting-color-purple"></div> -->
+
+                  <input
+                    type="text"
+                    id="settingStatusInput2"
+                    class="setting-status-input"
+                    placeholder="En cours"
+                  >
+                </div>
+              </div>
+
+              <div class="setting-status-item">
+                <span class="setting-status-number">03</span>
+
+                <div class="setting-status-input-wrapper">
+                  <!-- <div class="setting-status-color setting-color-orange"></div> -->
+
+                  <input
+                    type="text"
+                    id="settingStatusInput3"
+                    class="setting-status-input"
+                    placeholder="Validation"
+                  >
+                </div>
+              </div>
+
+              <div class="setting-status-item">
+                <span class="setting-status-number">04</span>
+
+                <div class="setting-status-input-wrapper">
+                  <!-- <div class="setting-status-color setting-color-green"></div> -->
+
+                  <input
+                    type="text"
+                    id="settingStatusInput4"
+                    class="setting-status-input"
+                    placeholder="Terminé"
+                  >
+                </div>
+              </div>
+
+              <div class="setting-status-item">
+                <span class="setting-status-number">05</span>
+
+                <div class="setting-status-input-wrapper">
+                  <!-- <div class="setting-status-color setting-color-gray"></div> -->
+
+                  <input
+                    type="text"
+                    id="settingStatusInput5"
+                    class="setting-status-input"
+                    placeholder="Archivé"
+                  >
+                </div>
+              </div>
+
+            </div>
+
+            <div class="setting-info-box">
+              <span>ℹ</span>
+              <p>
+                Ces statuts sont utilisés dans toute l’application pour organiser vos tâches.
+              </p>
+            </div>
+
+          </div>
+
+          <!-- DATA CARD -->
+          <div id="settingDataCard" class="setting-card">
+
+            <div class="setting-card-header">
+              <div class="setting-card-icon">
+                💾
+              </div>
+
+              <div>
+                <h2 class="setting-card-title">Sauvegarde & données</h2>
+                <p class="setting-card-description">
+                  Importez, exportez et sauvegardez vos données localement.
+                </p>
+              </div>
+            </div>
+
+            <!-- IMPORT -->
+            <div class="setting-section-block">
+
+              <div class="setting-section-title-wrapper">
+                <h3 class="setting-section-title">Importer des données</h3>
+
+                <p class="setting-section-description">
+                  Restaurez une sauvegarde existante.
+                </p>
+              </div>
+
+              <label
+                for="settingImportInput"
+                id="settingImportDropzone"
+                class="setting-import-dropzone"
+              >
+
+                <div class="setting-import-icon">⬆</div>
+
+                <p class="setting-import-title">
+                  Glissez-déposez votre fichier ici
+                </p>
+
+                <span class="setting-import-subtitle">
+                  ou cliquez pour sélectionner un fichier
+                </span>
+
+                <input
+                  type="file"
+                  id="settingImportInput"
+                  class="setting-hidden-input"
+                  accept=".json"
+                >
+
+              </label>
+
+            </div>
+
+            <!-- EXPORT -->
+            <div class="setting-section-block setting-inline-block">
+
+              <div>
+                <h3 class="setting-section-title">Exporter les données</h3>
+
+                <p class="setting-section-description">
+                  Téléchargez une sauvegarde complète de l’application.
+                </p>
+              </div>
+
+              <button
+                id="settingExportButton"
+                class="setting-secondary-button"
+              >
+                Exporter
+              </button>
+
+            </div>
+
+            <!-- AUTO SAVE -->
+            <div class="setting-section-block">
+
+              <div class="setting-toggle-row">
+
+                <div>
+                  <h3 class="setting-section-title">
+                    Sauvegarde automatique
+                  </h3>
+
+                  <p class="setting-section-description">
+                    Active la sauvegarde automatique locale.
+                  </p>
+                </div>
+
+                <label class="setting-switch">
+
+                  <input
+                    type="checkbox"
+                    id="settingAutoSaveToggle"
+                    checked
+                  >
+
+                  <span class="setting-slider"></span>
+
+                </label>
+
+              </div>
+
+              <!-- FREQUENCY -->
+              <div class="setting-frequency-wrapper">
+
+                <label
+                  for="settingAutoSaveFrequency"
+                  class="setting-frequency-label"
+                >
+                  Fréquence
+                </label>
+
+                <select
+                  id="settingAutoSaveFrequency"
+                  class="setting-select"
+                >
+                  <option>Tous les jours</option>
+                  <option>Tous les 3 jours</option>
+                  <option selected>Tous les 7 jours</option>
+                  <option>Tous les 30 jours</option>
+                </select>
+
+              </div>
+
+            </div>
+
+            <!-- LAST SAVE -->
+            <div
+              id="settingLastSaveBox"
+              class="setting-last-save-box"
+            >
+
+              <span class="setting-last-save-label">
+                Dernière sauvegarde automatique
+              </span>
+
+              <span
+                id="settingLastSaveDate"
+                class="setting-last-save-date"
+              >
+                8 avril 2026 à 10:42
+              </span>
+
+            </div>
+
+            <!-- MANUAL SAVE -->
+            <div class="setting-section-block setting-inline-block">
+
+              <div>
+                <h3 class="setting-section-title">
+                  Sauvegarde manuelle
+                </h3>
+
+                <p class="setting-section-description">
+                  Lancez une sauvegarde immédiatement.
+                </p>
+              </div>
+
+              <button
+                id="settingManualSaveButton"
+                class="setting-primary-button"
+              >
+                Sauvegarder maintenant
+              </button>
+
+            </div>
+
+            <!-- RESET -->
+            <div class="setting-reset-wrapper">
+
+              <button
+                id="settingResetButton"
+                class="setting-danger-button"
+              >
+                Réinitialiser les paramètres
+              </button>
+
+            </div>
+
+          </div>
+
+        </section>
+
       </section>
     </main>
   </div>

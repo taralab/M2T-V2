@@ -57,7 +57,13 @@
       background:var(--sidebar);padding:20px 14px;display:flex;flex-direction:column;align-items:center;gap:18px
     }
     .icon{
-      width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:rgba(255,255,255,.06);color:#fff
+      width:42px;height:42px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:rgba(255,255,255,.06);
+      color:#fff;
+      cursor: pointer;
     }
     .icon.active{
       background:var(--primary)} .spacer{flex:1}
@@ -610,9 +616,7 @@
 
 
 
-.hidden {
-  display: none;
-}
+
 
 
 
@@ -650,3 +654,10 @@
 /* * {
   outline: 1px solid red;
 } */
+
+
+
+
+.hidden {
+  display: none;
+}

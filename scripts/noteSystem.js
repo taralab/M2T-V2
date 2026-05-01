@@ -239,7 +239,10 @@ let  divTaskEditorContainerRef = document.getElementById("divTaskEditorContainer
   btnTaskEditorDateEndRef = document.getElementById("btnTaskEditorDateEnd");
 
 
+// Menu principal
 
+let btnMenuMainPageRef = document.getElementById("btnMenuMainPage"),
+  btnMenuSettingRef = document.getElementById("btnMenuSetting");
 
 
 
@@ -334,6 +337,17 @@ function onAddEventListenerForMainItems() {
     e.stopPropagation();
     openCalendar("dateEnd", btnTaskEditorDateEndRef);
   });
+
+
+  //Menu principal
+  const selectMainMenu = () => onChangeMenu("MainPage");
+  btnMenuMainPageRef.addEventListener("click",selectMainMenu);
+  onAddEventListenerInRegistry("persistantItems",btnMenuMainPageRef,"click",selectMainMenu);
+
+  //menu setting
+  const selectSettingMenu = () => onChangeMenu("Setting");
+  btnMenuSettingRef.addEventListener("click",selectSettingMenu);
+  onAddEventListenerInRegistry("persistantItems",btnMenuSettingRef,"click",selectSettingMenu);
 
 
 }
