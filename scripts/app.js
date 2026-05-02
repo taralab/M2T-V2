@@ -1,7 +1,8 @@
 
 
 let dbName = `M2T_db`,
-    taskStoreName = "Task";
+    taskStoreName = "Task",
+    settingStoreName = "Setting";
 
 
 
@@ -55,12 +56,12 @@ window.addEventListener("visibilitychange", () => {
     const now = Date.now();
 
     // si retour après une longue pause 6 heures
-    if (lastHiddenTime && now - lastHiddenTime > 21_600_000) {
-      console.log("[APP] 🔄 long inactivity detected → refresh UI");
+    // if (lastHiddenTime && now - lastHiddenTime > 21_600_000) {
+    //   console.log("[APP] 🔄 long inactivity detected → refresh UI");
 
-      updateMainDisplayDate();
-      refreshAlertList();
-    }
+    //   updateMainDisplayDate();
+    //   refreshAlertList();
+    // }
   }
 });
 
@@ -68,11 +69,93 @@ window.addEventListener("visibilitychange", () => {
 
 
 
+
+
+// Création des éléments de base
+async function onCreateDBStore() {
+    async function createStore(storeId, data) {
+        try {
+            let existing;
+            try {
+                existing = await db.get(storeId);
+            } catch (err) {
+                if (err.status !== 404) { // Si ce n'est pas une erreur "document non trouvé", on affiche l'erreur
+                    console.error(`[DATABASE] Erreur lors de la vérification du store ${storeId}:`, err);
+                    return;
+                }
+                existing = null;
+            }
+
+            if (!existing) {
+                await db.put({ _id: storeId, ...data });
+                console.log(`[DATABASE] Création du store ${storeId.toUpperCase()}`);
+            } else {
+                console.log(`[DATABASE] Le store ${storeId.toUpperCase()} existe déjà`);
+            }
+        } catch (err) {
+            console.error(`[DATABASE] Erreur lors de la création du store ${storeId}:`, err);
+        }
+    }
+
+    // Création des stores
+    //Setting
+    await createStore(settingStoreName, {
+      type: settingStoreName,
+      data:{
+        isAutoSaveEnabled : defaultSetting.isAutoSaveEnabled,
+        lastSaveDate : defaultSetting.lastSaveDate,
+        autoSaveFrequency : defaultSetting.autoSaveFrequency,
+        devMode : defaultSetting.devMode,
+        status1: defaultSetting.status1,
+        status2: defaultSetting.status2,
+        status3: defaultSetting.status3,
+        status4: defaultSetting.status4,
+        status5: defaultSetting.status5,
+      }  
+    });
+
+
+}
+
+
+
+// Fonction pour récupérer les données des stores
+async function onLoadStores() {
+    try {
+        
+        const settings = await db.get(settingStoreName).catch(() => null);
+        if (settings) {
+
+            userSetting = {
+                isAutoSaveEnabled : settings.data.isAutoSaveEnabled ?? defaultSetting.isAutoSaveEnabled,
+                lastSaveDate : settings.data.lastSaveDate || defaultSetting.lastSaveDate,
+                autoSaveFrequency : settings.data.autoSaveFrequency || defaultSetting.autoSaveFrequency,
+                devMode : settings.data.devMode ?? defaultSetting.devMode,
+                status1: settings.data.status1 || defaultSetting.status1,
+                status2: settings.data.status2 || defaultSetting.status2,
+                status3: settings.data.status3 || defaultSetting.status3,
+                status4: settings.data.status4 || defaultSetting.status4,
+                status5: settings.data.status5 || defaultSetting.status5,
+            };
+        }
+
+        if (devMode === true){console.log("[DATABASE] Données chargées :", {userSetting });};
+    } catch (err) {
+        console.error("[DATABASE] Erreur lors du chargement des stores :", err);
+    }
+}
+
+
+
 // Procésus de lancement de l'application
 async function initApp() {
+    await onCreateDBStore(); // 1️⃣ Création des stores si inexistnat
 
+    await onLoadStores(); // Chargement des stores
     await onLoadTaskFromDB();
 }
+
+
 
 // Appel de la fonction après l'initialisation
 initApp().then(() => firstActualisation());

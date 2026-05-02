@@ -18,12 +18,12 @@
       --gray-soft:   #f5f6f8;
     }
 
-@font-face {
-  font-family: 'Inter';
-  src: url('../font/inter-v20-latin-regular.woff2') format('woff2');
-  font-weight: 400;
-  font-display: swap;
-}
+
+/* =============================
+   INTER FONT (COMPLET)
+============================= */
+
+
 
 @font-face {
   font-family: 'Inter';
@@ -45,6 +45,21 @@
   font-weight: 700;
   font-display: swap;
 }
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../font/inter-v20-latin-800.woff2') format('woff2');
+  font-weight: 800;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Inter';
+  src: url('../font/inter-v20-latin-900.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
 
     *{box-sizing:border-box} body{margin:0;font-family:Inter,sans-serif;background:var(--bg);color:var(--text)}
 
