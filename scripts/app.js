@@ -105,8 +105,7 @@ async function onCreateDBStore() {
         isAutoSaveEnabled : defaultSetting.isAutoSaveEnabled,
         lastSaveDate : defaultSetting.lastSaveDate,
         autoSaveFrequency : defaultSetting.autoSaveFrequency,
-        devMode : defaultSetting.devMode,
-        status: defaultSetting.status,
+        devMode : defaultSetting.devMode
       }  
     });
 
@@ -126,8 +125,7 @@ async function onLoadStores() {
                 isAutoSaveEnabled : settings.data.isAutoSaveEnabled ?? defaultSetting.isAutoSaveEnabled,
                 lastSaveDate : settings.data.lastSaveDate || defaultSetting.lastSaveDate,
                 autoSaveFrequency : settings.data.autoSaveFrequency || defaultSetting.autoSaveFrequency,
-                devMode : settings.data.devMode ?? defaultSetting.devMode,
-                status: settings.data.status || defaultSetting.status
+                devMode : settings.data.devMode ?? defaultSetting.devMode
             };
         }
 

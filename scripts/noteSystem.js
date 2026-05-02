@@ -6,7 +6,7 @@ let allUserNoteList = {
     dateLastModification: "2026-04-12",
     dateStart: "",
     dateEnd: "2026-04-20",
-    status: "status1",
+    status: "A",
     stepArray: [
       {
         id: "stp_k29fla",
@@ -43,7 +43,7 @@ let defaultTaskCanvas = {
     dateCreated: "",
     dateStart: "",
     dateEnd: "",
-    status: "status1",
+    status: "A",
     stepArray: [],
     detail: "",
     priority: "LOW"
@@ -69,9 +69,11 @@ const debounceEditTaskvalue = 300; //Delai avant traitement des modifications de
 
 // Les alias
 const defaultAliasStatus = {
-  status1: "A faire",
-  status2: "En cours",
-  status3: "En attente"
+  A:"A faire",
+  B:"En cours",
+  C:"En attente",
+  D:"Terminée",
+  E:"Archivée"
 };
 
 const defaultAliasPriority = {
@@ -791,7 +793,7 @@ function eventUpdateList(sortType, filteredIds = null, searchMeta = {}) {
   // 📌 ordre métier
   const groupOrderConfig = {
     priority: ["HIGH", "MEDIUM", "LOW"],
-    status: ["status1", "status2", "status3"]
+    status: ["A", "B", "C","D","E"]
   };
 
   let orderedGroups;
