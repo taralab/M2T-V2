@@ -19,6 +19,35 @@ function updateMainDisplayDate() {
 
 
 
+// Fonction unique pour modifier tous les types de documents
+
+async function updateDocumentInDB(docId, updateCallback) {
+    try {
+        // Récupérer le document
+        const doc = await db.get(docId);
+
+        if (!doc._id || !doc._rev) {
+            throw new Error("Le document ne contient pas d'_id ou de _rev !");
+        }
+
+        // Appliquer la mise à jour avec la fonction callback
+        const updatedDoc = updateCallback({ ...doc });
+
+        // Sauvegarde en base
+        const response = await db.put(updatedDoc);
+
+        if (devMode === true){
+            console.log(`Document ${docId} mis à jour avec succès :`, response);
+        };
+        return true;
+    } catch (err) {
+        console.error(`Erreur lors de la mise à jour du document ${docId} :`, err.message);
+        return false;
+    }
+}
+
+
+
 
 
 // Registre des listeners

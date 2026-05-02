@@ -6,7 +6,7 @@ let devMode = false,
 
 const defaultSetting =  {
     isAutoSaveEnabled : false,
-    lastSaveDate : "",
+    lastSaveDate : {},
     autoSaveFrequency : 7,
     devMode : false,
 }
