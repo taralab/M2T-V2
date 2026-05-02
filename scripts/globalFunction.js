@@ -139,7 +139,7 @@ function onChangeMenu(menuTarget) {
     //Aucune action si clique sur le menu en cours
     if (currentMenu === menuTarget) {
         
-        if (devMode) {
+        if (userSetting.devMode) {
             console.log("Aucune action c'est le même menu");
         }
         return;

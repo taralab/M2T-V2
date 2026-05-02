@@ -126,7 +126,7 @@ function renderList(containerId, items, itemType) {
   }
 
   items.forEach(function(item) {
-    if (devMode) {
+    if (userSetting.devMode) {
       console.log(item);
     }
 
@@ -192,7 +192,7 @@ function renderNotifications() {
 //lors de suppression et validation d'une tache
 
 function refreshAlertList() {
-  if (devMode) {
+  if (userSetting.devMode) {
     console.log("Actualisation des alertes");
   }
   //Récupère les éléments dans les taches

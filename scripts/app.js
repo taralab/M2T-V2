@@ -106,11 +106,7 @@ async function onCreateDBStore() {
         lastSaveDate : defaultSetting.lastSaveDate,
         autoSaveFrequency : defaultSetting.autoSaveFrequency,
         devMode : defaultSetting.devMode,
-        status1: defaultSetting.status1,
-        status2: defaultSetting.status2,
-        status3: defaultSetting.status3,
-        status4: defaultSetting.status4,
-        status5: defaultSetting.status5,
+        status: defaultSetting.status,
       }  
     });
 
@@ -131,15 +127,11 @@ async function onLoadStores() {
                 lastSaveDate : settings.data.lastSaveDate || defaultSetting.lastSaveDate,
                 autoSaveFrequency : settings.data.autoSaveFrequency || defaultSetting.autoSaveFrequency,
                 devMode : settings.data.devMode ?? defaultSetting.devMode,
-                status1: settings.data.status1 || defaultSetting.status1,
-                status2: settings.data.status2 || defaultSetting.status2,
-                status3: settings.data.status3 || defaultSetting.status3,
-                status4: settings.data.status4 || defaultSetting.status4,
-                status5: settings.data.status5 || defaultSetting.status5,
+                status: settings.data.status || defaultSetting.status
             };
         }
 
-        if (devMode === true){console.log("[DATABASE] Données chargées :", {userSetting });};
+        if (userSetting.devMode){console.log("[DATABASE] Données chargées :", {userSetting });};
     } catch (err) {
         console.error("[DATABASE] Erreur lors du chargement des stores :", err);
     }

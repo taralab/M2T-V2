@@ -110,7 +110,7 @@ async function onInsertNewTaskInDB(newTaskToInsert) {
 
         // Mise à jour de l'objet avec _rev retourné
         newTask._rev = response.rev;
-        if (devMode) {
+        if (userSetting.devMode) {
           console.log("[DATABASE] [TASK] Tache insérée :", newTask);
         }
 
@@ -159,7 +159,7 @@ async function onLoadTaskFromDB() {
             console.log("[DATABASE] [TASK] taches chargées :", taskStoreName);
 
             const firstKey = Object.keys(allUserNoteList)[0];
-            if (devMode) {
+            if (userSetting.devMode) {
               console.log(allUserNoteList[firstKey]);
             }
 
@@ -1123,7 +1123,7 @@ function onSetTaskEditor(data) {
 //Systeme de coloration de la tache en cours
 function syncTaskSelection(newTaskId) {
 
-  if (devMode) {
+  if (userSetting.devMode) {
     console.log(`Sync task selection → ${newTaskId}`);
   }
 
@@ -1195,7 +1195,7 @@ function syncListItem(id) {
   // 📦 source de vérité
   const data = allUserNoteList[id];
 
-  if (devMode) {
+  if (userSetting.devMode) {
     console.log(data);
   }
   // 🔄 mise à jour ciblée de l'UI
@@ -1302,13 +1302,13 @@ const debouncedUpdateTaskPriority = debounce((newPriority) => {
   if (uiState.sortType === "priority") {
     //on reactualise toute la liste
     refreshUI();
-    if (devMode) {
+    if (userSetting.devMode) {
       console.log("Reactualisation");
     }
   }else{
     //Sinon 🔄 sync UI
     syncListItem(id);
-    if (devMode) {
+    if (userSetting.devMode) {
       console.log("mise a jour instance");
     }
   }
@@ -1337,13 +1337,13 @@ const debouncedUpdateTaskStatus = debounce((newStatus) => {
   if (uiState.sortType === "status") {
     //on reactualise toute la liste
     refreshUI();
-    if (devMode) {
+    if (userSetting.devMode) {
       console.log("Reactualisation");
     }
   }else{
     //Sinon 🔄 sync UI
     syncListItem(id);
-    if (devMode) {
+    if (userSetting.devMode) {
       console.log("mise a jour instance");
     }
   }
@@ -1620,7 +1620,7 @@ function hasTaskChanged(id, task) {
 // Cette fonction sera appelée après X ms sans nouvelle modif
 const debouncedSaveAllTasks = debounce(async () => {
 
-  if (devMode) {
+  if (userSetting.devMode) {
     console.log("[DB] 🚀 Début batch save");
   }
 
@@ -1634,7 +1634,7 @@ const debouncedSaveAllTasks = debounce(async () => {
 
     // 🔍 skip si aucune modification réelle
     if (!hasTaskChanged(id, task)) {
-      if (devMode) {
+      if (userSetting.devMode) {
         console.log("[DB] ⏭️ skip (no change)", id);
       }
       continue;
@@ -1646,7 +1646,7 @@ const debouncedSaveAllTasks = debounce(async () => {
 
       // 🔄 IMPORTANT : mise à jour du _rev
       task._rev = response.rev;
-      if (devMode) {
+      if (userSetting.devMode) {
         console.log("[DB] ✅ saved", id);
       }
 
@@ -1661,7 +1661,7 @@ const debouncedSaveAllTasks = debounce(async () => {
   //actualisation des alertes
   refreshAlertList();
 
-  if (devMode) {
+  if (userSetting.devMode) {
     console.log("[DB] 🧹 Fin batch");
   }
 
