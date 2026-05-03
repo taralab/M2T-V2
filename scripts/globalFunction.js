@@ -57,7 +57,8 @@ async function updateDocumentInDB(docId, updateCallback) {
 const allEventListenerRegistry = {
     //l'éditeur d'un item
     persistantItems:[],
-    taskItemEditor:[]
+    taskItemEditor:[],
+    setting:[]
 }
 
 
@@ -190,7 +191,7 @@ function onChangeMenu(menuTarget) {
         case "Setting":
             btnMenuSettingRef.classList.add("active");
             document.getElementById("sectionSettingPage").classList.remove("hidden");
-
+            onOpenSettingMenu();
             break;
 
         case "Timeline":
@@ -223,6 +224,7 @@ function onLeaveMenu(menuTarget) {
         case "Setting":
             btnMenuSettingRef.classList.remove("active");
             document.getElementById("sectionSettingPage").classList.add("hidden");
+            onLeaveSettingMenu();
             break;
 
         case "Timeline":

@@ -1,6 +1,30 @@
 let currentExportVersion = 0;//version actuel des fichers d'import/export
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // ---------------------------------------- SAUVEGARDE ---------------------------------------------------
 
 
@@ -9,7 +33,7 @@ let currentExportVersion = 0;//version actuel des fichers d'import/export
 // Step 2 réinitialisation des chrono et minuteur avant export
 // Step 3 lancement de export
 
-async function eventSaveData(isAutoSave,isInCloud = false) {
+async function eventSaveData() {
 
     //Traitement date de sauvegarde
     let saveDate = getSaveFormattedDateNow();
@@ -84,15 +108,14 @@ async function exportDBToJson(saveDate) {
       documents: exportedDocs,
       __integrity: {
         exportComplete: true,
-        timestamp: Date.now(),
-        pseudo: userInfo?.pseudo || "anonymous"
+        timestamp: Date.now()
       }
     };
 
     const jsonData = JSON.stringify(fullExport, null, 2);
 
     // 3. Nom du fichier
-    const fileName = `M2T_V${currentExportVersion}_AUTOSAVE_${saveDate}_${exportTimeFileName}.json`;
+    const fileName = `M2T_V${currentExportVersion}_SAVE_${saveDate}.json`;
 
     // 4. Création du Blob
     const blob = new Blob([jsonData], { type: "application/json" });
