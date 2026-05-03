@@ -39,6 +39,9 @@ async function eventSaveData() {
     let saveDate = getSaveFormattedDateNow();
     userSetting.lastSaveDate = saveDate;
 
+    //actualise l'affichage
+    textSettingLastSaveDateRef.textContent = userSetting.lastSaveDate.readable;
+
     // Enregistrement date/heure dans les paramètres
     // Sauvegarde la modification
     await updateDocumentInDB(settingStoreName, (doc) => {

@@ -25,47 +25,98 @@ db.info().then(info => {
 );
 
 
+let lastHiddenTime = null;
+
+/**
+ * ================================
+ * 🧠 FLUSH GLOBAL AVANT SORTIE
+ * ================================
+ * Objectif :
+ * - Forcer l’exécution des debounces
+ * - Limiter la perte de données
+ *
+ * ⚠️ Important :
+ * - "flush()" déclenche la fonction mais n'attend PAS les await internes
+ * - donc on est en "best effort" (limite navigateur)
+ */
 
 
-
-
-
-
-// ==============================
-// 🛑 FLUSH AVANT SORTIE
-// ==============================
-
-// Quand l'utilisateur change d'onglet / minimise / ferme
+/**
+ * ================================
+ * 👁️ VISIBILITY CHANGE
+ * ================================
+ * Déclenché quand :
+ * - changement d’onglet
+ * - minimisation
+ * - parfois fermeture
+ */
 window.addEventListener("visibilitychange", () => {
 
-  //Quitte l'application
   if (document.visibilityState === "hidden") {
 
-    console.log("[DB] ⚠️ flush before exit");
+    console.log("[DB] ⚠️ visibilitychange → flush before background");
 
-    // Force exécution immédiate du debounce
+    // 🕒 IMPORTANT : timestamp de sortie
+    lastHiddenTime = Date.now();
+
+    // 🔄 flush tasks
     if (debouncedSaveAllTasks.flush) {
       debouncedSaveAllTasks.flush();
     }
+
+    // 🔄 flush settings
+    if (debouncedSaveUserSettings.flush) {
+      debouncedSaveUserSettings.flush();
+    }
   }
 
-  //Revient dans l'application
   if (document.visibilityState === "visible") {
+
     console.log("[APP] 👀 back in app");
 
     const now = Date.now();
+    const SIX_HOURS = 21_600_000;
 
-    // si retour après une longue pause 6 heures
-    // if (lastHiddenTime && now - lastHiddenTime > 21_600_000) {
-    //   console.log("[APP] 🔄 long inactivity detected → refresh UI");
+    if (lastHiddenTime && (now - lastHiddenTime > SIX_HOURS)) {
 
-    //   updateMainDisplayDate();
-    //   refreshAlertList();
-    // }
+      console.log("[APP] 🔄 long inactivity detected → refresh UI");
+
+      updateMainDisplayDate();
+      refreshAlertList();
+    }
+
+    // 🧹 reset
+    lastHiddenTime = null;
   }
 });
 
 
+
+/**
+ * ================================
+ * 🚪 PAGEHIDE (PLUS FIABLE)
+ * ================================
+ * Déclenché quand :
+ * - fermeture onglet
+ * - navigation
+ * - reload
+ *
+ * 👉 plus fiable que visibilitychange seul
+ */
+window.addEventListener("pagehide", () => {
+
+  console.log("[DB] ⚠️ pagehide → force flush");
+
+  // 🔄 tâches
+  if (debouncedSaveAllTasks.flush) {
+    debouncedSaveAllTasks.flush();
+  }
+
+  // 🔄 settings
+  if (debouncedSaveUserSettings.flush) {
+    debouncedSaveUserSettings.flush();
+  }
+});
 
 
 
