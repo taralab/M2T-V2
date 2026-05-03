@@ -18,8 +18,9 @@ function onAddEventListenerForSetting() {
     
     //gest data
     //Import
-
-
+    const importData = () => eventImportBdD();
+    inputSettingImportRef.addEventListener("change",importData);
+    onAddEventListenerInRegistry("setting",inputSettingImportRef,"change",importData);
 
     //Export
     const manualSave = () => eventSaveData();
@@ -52,7 +53,7 @@ let btnSettingManualSaveButtonRef,
     inputSettingAutoSaveToggleRef,
     textSettingLastSaveDateRef,
     selectSettingAutoSaveFrequencyRef,
-    inputSettingImport,
+    inputSettingImportRef,
     inputSettingDevModeToggle;
 
 // ----------------------------------------------------

@@ -156,95 +156,517 @@ async function exportDBToJson(saveDate) {
 
 
 
+async function eventImportBdD() {
 
+    /*
+    =====================================================
+    IMPORT DATABASE EVENT
+    =====================================================
 
-async function eventImportBdD(inputRef) {
+    Gère :
+    - lecture du fichier JSON
+    - validation structurelle
+    - vérification version
+    - suppression / recréation DB
+    - import des documents
+    - feedback UI succès / erreur
+
+    =====================================================
+    */
+
+    /*
+    -----------------------------------------------------
+    VARIABLES
+    -----------------------------------------------------
+    */
+
     let isSaveVersionValid = true;
-    const fileInput = document.getElementById(inputRef);
-    let textResultRef = document.getElementById("pImportActivityResult");
 
+    const fileInput = inputSettingImportRef;
 
-    if (fileInput.files.length > 0) {
-        textResultRef.innerHTML = "Veuillez patienter...";
-        const selectedFile = fileInput.files[0];
-        const reader = new FileReader();
+    const successBox =
+        document.getElementById("settingImportSuccess");
 
-        reader.onload = async function (e) {
-            const rawText = e.target.result;
+    const errorBox =
+        document.getElementById("settingImportError");
 
-            // Fonction d'attente
-            const wait = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+    /*
+    -----------------------------------------------------
+    RESET UI FEEDBACK
+    -----------------------------------------------------
+    */
 
-            // Vérifie l'intégrité du fichier avant de parser
-            async function tryParseJsonWithIntegrity(text, maxAttempts = 3, delay = 2000) {
-                for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+    successBox.classList.add("hidden");
+    errorBox.classList.add("hidden");
+
+    /*
+    -----------------------------------------------------
+    CHECK FILE SELECTION
+    -----------------------------------------------------
+    */
+
+    if (fileInput.files.length <= 0) {
+
+        showImportError(
+            "Aucun fichier sélectionné."
+        );
+
+        return;
+    }
+
+    /*
+    -----------------------------------------------------
+    FILE VARIABLES
+    -----------------------------------------------------
+    */
+
+    const selectedFile =
+        fileInput.files[0];
+
+    const reader =
+        new FileReader();
+
+    /*
+    -----------------------------------------------------
+    FILE LOADED
+    -----------------------------------------------------
+    */
+
+    reader.onload = async function (e) {
+
+        const rawText =
+            e.target.result;
+
+        /*
+        =====================================================
+        WAIT FUNCTION
+        =====================================================
+        */
+
+        const wait = (ms) =>
+            new Promise(resolve =>
+                setTimeout(resolve, ms)
+            );
+
+        /*
+        =====================================================
+        JSON INTEGRITY VALIDATION
+        =====================================================
+
+        Vérifie :
+        - structure JSON
+        - présence intégrité
+        - taille minimale
+        - parsing valide
+
+        =====================================================
+        */
+
+        async function tryParseJsonWithIntegrity(
+            text,
+            maxAttempts = 3,
+            delay = 1000
+        ) {
+
+            for (
+                let attempt = 1;
+                attempt <= maxAttempts;
+                attempt++
+            ) {
+
+                const isValidStructure =
+
+                    text.startsWith("{") &&
+                    text.trim().endsWith("}") &&
+                    text.includes('"__integrity":') &&
+                    text.length > 100;
+
+                if (isValidStructure) {
+
+                    try {
+
+                        return JSON.parse(text);
+
+                    } catch (e) {
+
+                        console.warn(
+                            `[IMPORT] JSON.parse échoué - tentative ${attempt}`
+                        );
+                    }
+                }
+
+                /*
+                ---------------------------------------------
+                RETRY DELAY
+                ---------------------------------------------
+                */
+
+                if (attempt < maxAttempts) {
+
+                    console.warn(
+                        `[IMPORT] Nouvelle tentative dans ${delay}ms`
+                    );
+
+                    await wait(delay);
+                }
+            }
+
+            /*
+            ---------------------------------------------
+            INVALID FILE
+            ---------------------------------------------
+            */
+
+            throw new Error(
+                "Sauvegarde invalide ou corrompue."
+            );
+        }
+
+        /*
+        =====================================================
+        IMPORT PROCESS
+        =====================================================
+        */
+
+        try {
+
+            /*
+            -------------------------------------------------
+            PARSE JSON
+            -------------------------------------------------
+            */
+
+            const jsonData =
+                await tryParseJsonWithIntegrity(rawText);
+
+            console.log(
+                "[IMPORT] JSON chargé :",
+                jsonData
+            );
+
+            /*
+            -------------------------------------------------
+            FORMAT VERSION
+            -------------------------------------------------
+            */
+
+            const version =
+                jsonData.formatVersion ?? 0;
+
+            /*
+            -------------------------------------------------
+            IMPORTED DOCUMENTS
+            -------------------------------------------------
+            */
+
+            let importedDocs = [];
+
+            /*
+            -------------------------------------------------
+            VERSION MANAGEMENT
+            -------------------------------------------------
+            */
+
+            switch (version) {
+
+                /*
+                =============================================
+                VERSION 0
+                =============================================
+                */
+
+                case 0:
+
+                    isSaveVersionValid = true;
+
+                    importedDocs =
+                        jsonData.documents ?? [];
+
+                    /*
+                    -----------------------------------------
+                    VALIDATE DOCUMENT ARRAY
+                    -----------------------------------------
+                    */
+
                     if (
-                        text.startsWith("{") &&
-                        text.trim().endsWith("}") &&
-                        text.includes('"__integrity":') &&
-                        text.length > 100
+                        !Array.isArray(importedDocs)
                     ) {
-                        try {
-                            return JSON.parse(text);
-                        } catch (e) {
-                            console.warn(`[IMPORT] Tentative ${attempt} : JSON.parse échoué`);
-                        }
+
+                        throw new Error(
+                            "Structure de sauvegarde invalide."
+                        );
                     }
 
-                    if (attempt < maxAttempts) {
-                        console.warn(`[IMPORT] Tentative ${attempt} échouée, nouvelle tentative dans ${delay}ms...`);
-                        textResultRef.innerHTML = `Tentative d'import ${attempt} : Echec. Nouvelle tentative dans 2 secondes...`;
-                        await wait(delay);
-                    }
-                }
+                    break;
 
-                throw new Error("❌ Base inférieure à V3 non acceptée!");
+                /*
+                =============================================
+                FUTURE VERSIONS
+                =============================================
+
+                case 1:
+                    ...
+                    break;
+
+                */
+
+                default:
+
+                    throw new Error(
+                        "Version de sauvegarde inconnue."
+                    );
             }
 
-            try {
-                const jsonData = await tryParseJsonWithIntegrity(rawText);
+            /*
+            -------------------------------------------------
+            VERSION NOT SUPPORTED
+            -------------------------------------------------
+            */
 
-                // Détection du formatVersion (_v0 si inexistant = ancien format)
-                const version = jsonData.formatVersion || 0;
-                let importedDocs = [];
+            if (!isSaveVersionValid) {
 
-                switch (version) {
-                    case 0:
-                        console.log("[IMPORT] V0 plus supporté");
-                        isSaveVersionValid = false;
-                        break;
+                showImportError(
+                    "Cette sauvegarde n'est plus compatible."
+                );
 
-                    default:
-                        throw new Error("⚠️ Format de fichier inconnu.");
-                }
-
-                if (!isSaveVersionValid) {
-                    alert("Les sauvegardes inférieures à XX ne sont plus autorisées dans l'application");
-                    textResultRef.innerHTML = "Sauvegardes inférieures à XX non autorisées !";
-                    return;
-                }
-
-                await deleteBase();
-
-                db = new PouchDB(dbName, { auto_compaction: true });
-                await db.info().then(info => console.log(' [DATABASE] Base créée/ouverte :', info));
-
-                await onCreateDBStore();
-
-                await importBdD(importedDocs);
-
-                textResultRef.innerHTML = "Importation réussie !";
-
-            } catch (error) {
-                console.error('[IMPORT] Erreur lors du traitement du fichier :', error);
-                textResultRef.innerHTML = `Erreur d'importation : ${error.message}`;
+                return;
             }
-        };
 
-        reader.readAsText(selectedFile);
-    } else {
-        console.error('[IMPORT] Aucun fichier sélectionné.');
-        textResultRef.innerHTML = "Aucun fichier sélectionné !";
+            /*
+            =====================================================
+            DATABASE RESET
+            =====================================================
+            */
+
+            console.log(
+                "[IMPORT] Suppression ancienne base..."
+            );
+
+            await deleteBase();
+
+            /*
+            -------------------------------------------------
+            RECREATE DATABASE
+            -------------------------------------------------
+            */
+
+            db = new PouchDB(
+                dbName,
+                {
+                    auto_compaction: true
+                }
+            );
+
+            await db.info().then(info => {
+
+                console.log(
+                    "[DATABASE] Base créée :",
+                    info
+                );
+            });
+
+            /*
+            -------------------------------------------------
+            CREATE STORES
+            -------------------------------------------------
+            */
+
+            await onCreateDBStore();
+
+            /*
+            =====================================================
+            IMPORT DOCUMENTS
+            =====================================================
+            */
+
+            console.log(
+                `[IMPORT] ${importedDocs.length} documents à importer`
+            );
+
+            await importBdD(importedDocs);
+
+            /*
+            =====================================================
+            IMPORT SUCCESS
+            =====================================================
+            */
+
+            showImportSuccess(
+                "Données importées avec succès."
+            );
+
+            /*
+            -------------------------------------------------
+            RESET INPUT
+            -------------------------------------------------
+            */
+
+            fileInput.value = "";
+
+            /*
+            -------------------------------------------------
+            RELOAD
+            -------------------------------------------------
+            */
+
+            setTimeout(() => {
+
+                window.location.reload();
+
+            }, 1200);
+            console.log(
+                "[IMPORT] Import terminé avec succès."
+            );
+        }
+
+        /*
+        =====================================================
+        IMPORT ERROR
+        =====================================================
+        */
+
+        catch (error) {
+
+            console.error(
+                "[IMPORT] Erreur :",
+                error
+            );
+
+            showImportError(
+                error.message ||
+                "Erreur lors de l'import."
+            );
+        }
+    };
+
+    /*
+    =====================================================
+    READ FILE
+    =====================================================
+    */
+
+    reader.readAsText(selectedFile);
+
+    /*
+    =====================================================
+    UI HELPERS
+    =====================================================
+    */
+
+    /*
+    -----------------------------------------------------
+    SUCCESS MESSAGE
+    -----------------------------------------------------
+    */
+
+    function showImportSuccess(message) {
+
+        successBox.querySelector(
+            ".setting-feedback-text"
+        ).textContent = message;
+
+        successBox.classList.remove("hidden");
+
+        errorBox.classList.add("hidden");
+
+        autoHide(successBox);
+    }
+
+    /*
+    -----------------------------------------------------
+    ERROR MESSAGE
+    -----------------------------------------------------
+    */
+
+    function showImportError(message) {
+
+        errorBox.querySelector(
+            ".setting-feedback-text"
+        ).textContent = message;
+
+        errorBox.classList.remove("hidden");
+
+        successBox.classList.add("hidden");
+
+        autoHide(errorBox);
+    }
+
+    /*
+    -----------------------------------------------------
+    AUTO HIDE FEEDBACK
+    -----------------------------------------------------
+    */
+
+    function autoHide(element) {
+
+        setTimeout(() => {
+
+            element.classList.add("hidden");
+
+        }, 5000);
     }
 }
 
+
+
+
+
+async function importBdD(dataToImport) {
+    console.log("IMPORTBDD");
+
+    for (const e of dataToImport) {
+        // TASK
+        if (e.type === taskStoreName) {
+            const tempTaskToInsertFormat = {
+                category: e.category,
+                title: e.title,
+                dateCreated: e.dateCreated,
+                dateStart: e.dateStart,
+                dateEnd: e.dateEnd,
+                status: e.status,
+                stepArray: e.stepArray,
+                detail: e.detail,
+                priority: e.priority
+            };
+            await onInsertNewTaskInDB(tempTaskToInsertFormat);
+
+            //SETTING
+            }else if (e.type === settingStoreName){
+                const tempSettingToUpdate = {
+
+                isAutoSaveEnabled :
+                    e.data.isAutoSaveEnabled
+                    ?? defaultSetting.isAutoSaveEnabled,
+
+                lastSaveDate :
+                    e.data.lastSaveDate
+                    ?? {},
+
+                autoSaveFrequency :
+                    e.data.autoSaveFrequency
+                    ?? defaultSetting.autoSaveFrequency,
+
+                devMode :
+                    e.data.devMode
+                    ?? defaultSetting.devMode
+            };
+
+            // Sauvegarde la modification
+            await updateDocumentInDB(settingStoreName, (doc) => {
+                doc.data = tempSettingToUpdate;
+                return doc;
+            });
+        }
+    }
+};
+
+
+async function deleteBase() {
+    try {
+        // Supprimer complètement la base de données (y compris les séquences et métadonnées)
+        await new PouchDB(dbName).destroy();
+        console.log("[DELETE] La base de données a été complètement supprimée.");
+    } catch (error) {
+        console.error("[DELETE] Erreur lors de la suppression complète de la base :", error);
+    }
+}
