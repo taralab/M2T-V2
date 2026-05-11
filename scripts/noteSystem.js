@@ -37,17 +37,6 @@ let allUserNoteList = {
 
 
 
-let defaultTaskCanvas = {
-    category: "Nouvelle categorie",
-    title: "Nouvelle tache",
-    dateCreated: "",
-    dateStart: "",
-    dateEnd: "",
-    status: "A",
-    stepArray: [],
-    detail: "",
-    priority: "LOW"
-};
 
 
 
@@ -1546,6 +1535,20 @@ function syncStepOrderFromDOM() {
 
 async function onClickAddNewTask() {
   
+  let defaultTaskCanvas = {
+    category: "Nouvelle categorie",
+    title: "Nouvelle tache",
+    dateCreated: "",
+    dateStart: "",
+    dateEnd: "",
+    status: "A",
+    stepArray: [],
+    detail: "",
+    priority: "LOW"
+  };
+
+
+
   //récupère la date du jour
   let dateToday = new Date();
 
