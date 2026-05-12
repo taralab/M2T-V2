@@ -499,16 +499,30 @@ class ItemNoteList {
       MEDIUM: {
         icon: `
           <svg viewBox="0 0 24 24" class="priority-icon">
-            <rect x="4" y="11" width="16" height="2" rx="1"/>
+            <rect
+              x="7"
+              y="7"
+              width="10"
+              height="10"
+              rx="2"
+              transform="rotate(45 12 12)"
+            />
           </svg>
         `,
-        color: "#D98E2F"
+        color: "#E0A23B"
       },
 
       LOW: {
         icon: `
           <svg viewBox="0 0 24 24" class="priority-icon">
-            <circle cx="12" cy="12" r="3"/>
+            <circle
+              cx="12"
+              cy="12"
+              r="6"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+            />
           </svg>
         `,
         color: "#5B6FE5"
@@ -1454,6 +1468,10 @@ function onAddStep() {
   setTimeout(() => {
     stepInstance.refs.text.focus();
   }, 0);
+
+
+  // 🔄 update progress dans la liste
+  syncListItem(noteId);
 
 }
 
